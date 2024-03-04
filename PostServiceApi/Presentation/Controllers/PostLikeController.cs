@@ -15,7 +15,7 @@ namespace Presentation.Controllers
             this.postLikeService = postLikeService;
         }
 
-        [HttpGet("{postLikeId:guid}")]
+        [HttpGet("{postLikeId:guid}", Name = nameof(GetPostLikeAsync))]
         [Produces("application/json", "application/xml")]
         [ProducesResponseType(typeof(PostLikeViewModel), 200)]
         public async Task<IActionResult> GetPostLikeAsync([FromRoute] Guid postLikeId)
@@ -32,7 +32,7 @@ namespace Presentation.Controllers
         {
             var id = await postLikeService.CreateAsync(postLikeViewModel);
 
-            return CreatedAtRoute(nameof(GetPostLikeAsync), new { Id = id }, id);
+            return CreatedAtRoute(nameof(GetPostLikeAsync), new { postLikeId = id }, id);
         }
 
         [HttpDelete("{postLikeId:guid}")]

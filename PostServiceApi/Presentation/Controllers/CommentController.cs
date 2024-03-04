@@ -6,7 +6,7 @@ namespace Presentation.Controllers
 {
     [ApiController]
     [Route("/api/comments")]
-    public class CommentController: ControllerBase
+    public class CommentController : ControllerBase
     {
         private readonly ICommentService commentService;
 
@@ -15,7 +15,7 @@ namespace Presentation.Controllers
             this.commentService = commentService;
         }
 
-        [HttpGet("{commentId:guid}")]
+        [HttpGet("{commentId:guid}", Name = nameof(GetCommentAsync))]
         [Produces("application/json", "application/xml")]
         [ProducesResponseType(typeof(CommentViewModel), 200)]
         public async Task<IActionResult> GetCommentAsync([FromRoute] Guid commentId)
@@ -32,7 +32,7 @@ namespace Presentation.Controllers
         {
             var id = await commentService.CreateAsync(commentViewModel);
 
-            return CreatedAtRoute(nameof(GetCommentAsync), new {Id = id}, id);
+            return CreatedAtRoute(nameof(GetCommentAsync), new { commentId = id }, id);
         }
 
         [HttpPut]

@@ -20,4 +20,10 @@
     <ProjectReference Include="..\Presentation\Presentation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Core">
+      <HintPath>..\..\Core\bin\Debug\net8.0\Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

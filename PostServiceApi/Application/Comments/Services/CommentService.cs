@@ -9,14 +9,15 @@ namespace Application.Comments.Services
         private readonly ICommentRepository commentRepository;
         private readonly ICommentViewModelMapper commentViewModelMapper;
 
-        public CommentService(ICommentRepository commentRepository)
+        public CommentService(ICommentRepository commentRepository, ICommentViewModelMapper commentViewModelMapper)
         {
             this.commentRepository = commentRepository;
+            this.commentViewModelMapper = commentViewModelMapper;
         }
 
         public async Task<Guid> CreateAsync(CommentViewModel viewModel)
         {
-            var entity =  commentViewModelMapper.Map(viewModel);
+            var entity = commentViewModelMapper.Map(viewModel with { Id = Guid.Empty });
 
             return await commentRepository.CreateAsync(entity);
         }
@@ -28,7 +29,7 @@ namespace Application.Comments.Services
 
         public async Task<CommentViewModel> GetAsync(Guid id)
         {
-            var entity =  await commentRepository.GetAsync(id) ?? throw new CommentNotFoundException(id);
+            var entity = await commentRepository.GetAsync(id) ?? throw new CommentNotFoundException(id);
             var viewModel = commentViewModelMapper.Map(entity);
 
             return viewModel;

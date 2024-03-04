@@ -17,7 +17,7 @@ namespace Application.Tags.Services
 
         public async Task<Guid> CreateAsync(TagViewModel viewModel)
         {
-            var entity = tagViewModelMapper.Map(viewModel);
+            var entity = tagViewModelMapper.Map(viewModel with { Id = Guid.Empty });
 
             return await tagRepository.CreateAsync(entity);
         }

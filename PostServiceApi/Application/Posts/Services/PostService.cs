@@ -17,7 +17,7 @@ namespace Application.Posts.Services
 
         public async Task<Guid> CreateAsync(PostViewModel viewModel)
         {
-            var entity = postMapper.Map(viewModel);
+            var entity = postMapper.Map(viewModel with { Id = Guid.Empty });
 
             return await postRepository.CreateAsync(entity);
         }

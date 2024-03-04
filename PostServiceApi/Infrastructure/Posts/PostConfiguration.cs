@@ -18,7 +18,8 @@ namespace Infrastructure.Posts
             builder.Property(post => post.CommentsCount).IsRequired();
             builder.Property(post => post.CreatedAt).IsRequired();
             builder.Property(post => post.UpdatedAt);
-            builder.Property(post => post.Tags);
+            builder.HasMany(post => post.Tags)
+                .WithMany();
         }
     }
 }
