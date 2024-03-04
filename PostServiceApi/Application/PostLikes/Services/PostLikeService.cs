@@ -17,7 +17,7 @@ namespace Application.PostLikes.Services
 
         public async Task<Guid> CreateAsync(PostLikeViewModel viewModel)
         {
-            var entity = postLikeViewModelMapper.Map(viewModel);
+            var entity = postLikeViewModelMapper.Map(viewModel with { Id = Guid.Empty });
 
             return await postLikeRepository.CreateAsync(entity);
         }
