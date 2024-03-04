@@ -1,4 +1,5 @@
-﻿using Application.Comments.Mappers;
+﻿using Api.MiddleWare;
+using Application.Comments.Mappers;
 using Application.Comments.Services;
 using Application.PostLikes.Mappers;
 using Application.PostLikes.Services;
@@ -37,6 +38,7 @@ namespace Api
             AddMappers(services);
             AddRepositories(services);
             AddServices(services);
+            AddMiddleWares(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -47,6 +49,7 @@ namespace Api
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
@@ -100,6 +103,11 @@ namespace Api
             services.AddScoped<IPostLikeViewModelMapper, PostLikeViewModelMapper>();
             services.AddScoped<ITagViewModelMapper, TagViewModelMapper>();
             services.AddScoped<IPostViewModelMapper, PostViewModelMapper>();
+        }
+
+        private static void AddMiddleWares(IServiceCollection services)
+        {
+            services.AddTransient<ExceptionHandlingMiddleware>();
         }
     }
 }
