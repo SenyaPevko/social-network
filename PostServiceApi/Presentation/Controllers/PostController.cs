@@ -15,7 +15,7 @@ namespace Presentation.Controllers
             this.postService = postService;
         }
 
-        [HttpGet("{postId:guid}")]
+        [HttpGet("{postId:guid}", Name = nameof(GetPostAsync))]
         [Produces("application/json", "application/xml")]
         [ProducesResponseType(typeof(PostViewModel), 200)]
         public async Task<IActionResult> GetPostAsync([FromRoute] Guid postId)

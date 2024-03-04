@@ -15,7 +15,7 @@ namespace Presentation.Controllers
             this.tagService = tagService;
         }
 
-        [HttpGet("{tagId:guid}")]
+        [HttpGet("{tagId:guid}", Name = nameof(GetTagAsync))]
         [Produces("application/json", "application/xml")]
         [ProducesResponseType(typeof(TagViewModel), 200)]
         public async Task<IActionResult> GetTagAsync([FromRoute] Guid tagId)
@@ -32,7 +32,7 @@ namespace Presentation.Controllers
         {
             var id = await tagService.CreateAsync(tagViewModel);
 
-            return CreatedAtRoute(nameof(GetTagAsync), new { Id = id }, id);
+            return CreatedAtRoute(nameof(GetTagAsync), new { tagId = id }, id);
         }
 
         [HttpDelete("{tagId:guid}")]
