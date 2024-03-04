@@ -9,9 +9,10 @@ namespace Application.Comments.Services
         private readonly ICommentRepository commentRepository;
         private readonly ICommentViewModelMapper commentViewModelMapper;
 
-        public CommentService(ICommentRepository commentRepository)
+        public CommentService(ICommentRepository commentRepository, ICommentViewModelMapper commentViewModelMapper)
         {
             this.commentRepository = commentRepository;
+            this.commentViewModelMapper = commentViewModelMapper;
         }
 
         public async Task<Guid> CreateAsync(CommentViewModel viewModel)
