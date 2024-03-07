@@ -1,12 +1,9 @@
-﻿using System.Net.Mime;
-using System.Text;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using Core.HttpLogic.HttpConnections.Services;
+﻿using Core.HttpLogic.HttpConnections.Services;
 using Core.TraceLogic.TraceWriters;
 using Core.HttpLogic.HttpConnections.Models;
 using Core.HttpLogic.HttpResponses.Models;
 using Core.HttpLogic.HttpRequests.Models;
+using Core.HttpLogic.HttpRequests.Parsers;
 
 namespace Core.HttpLogic.HttpRequests.Services
 {
@@ -15,13 +12,16 @@ namespace Core.HttpLogic.HttpRequests.Services
     {
         private readonly IHttpConnectionService httpConnectionService;
         private readonly IEnumerable<ITraceWriter> traceWriterList;
+        private readonly IToHttpContentParser<ContentType> contentTypeParser;
 
         public HttpRequestService(
             IHttpConnectionService httpConnectionService,
-            IEnumerable<ITraceWriter> traceWriterList)
+            IEnumerable<ITraceWriter> traceWriterList,
+            IToHttpContentParser<ContentType> contentTypeParser)
         {
             this.httpConnectionService = httpConnectionService;
             this.traceWriterList = traceWriterList;
+            this.contentTypeParser = contentTypeParser;
         }
 
         /// <inheritdoc />
@@ -40,69 +40,6 @@ namespace Core.HttpLogic.HttpRequests.Services
             }
             var res = await httpConnectionService.SendRequestAsync(httpRequestMessage, client, default);
             return null;
-        }
-
-        private static HttpContent PrepairContent(object body, ContentType contentType)
-        {
-            switch (contentType)
-            {
-                case ContentType.ApplicationJson:
-                    {
-                        if (body is string stringBody)
-                        {
-                            body = JToken.Parse(stringBody);
-                        }
-
-                        var serializeSettings = new JsonSerializerSettings
-                        {
-                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                            NullValueHandling = NullValueHandling.Ignore
-                        };
-                        var serializedBody = JsonConvert.SerializeObject(body, serializeSettings);
-                        var content = new StringContent(serializedBody, Encoding.UTF8, MediaTypeNames.Application.Json);
-                        return content;
-                    }
-
-                case ContentType.XWwwFormUrlEncoded:
-                    {
-                        if (body is not IEnumerable<KeyValuePair<string, string>> list)
-                        {
-                            throw new Exception(
-                                $"Body for content type {contentType} must be {typeof(IEnumerable<KeyValuePair<string, string>>).Name}");
-                        }
-
-                        return new FormUrlEncodedContent(list);
-                    }
-                case ContentType.ApplicationXml:
-                    {
-                        if (body is not string s)
-                        {
-                            throw new Exception($"Body for content type {contentType} must be XML string");
-                        }
-
-                        return new StringContent(s, Encoding.UTF8, MediaTypeNames.Application.Xml);
-                    }
-                case ContentType.Binary:
-                    {
-                        if (body.GetType() != typeof(byte[]))
-                        {
-                            throw new Exception($"Body for content type {contentType} must be {typeof(byte[]).Name}");
-                        }
-
-                        return new ByteArrayContent((byte[])body);
-                    }
-                case ContentType.TextXml:
-                    {
-                        if (body is not string s)
-                        {
-                            throw new Exception($"Body for content type {contentType} must be XML string");
-                        }
-
-                        return new StringContent(s, Encoding.UTF8, MediaTypeNames.Text.Xml);
-                    }
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(contentType), contentType, null);
-            }
         }
     }
 }
