@@ -1,4 +1,5 @@
-﻿using Core.TraceLogic.TraceWriters;
+﻿using Core.TraceLogic.TraceReaders;
+using Core.TraceLogic.TraceWriters;
 using Serilog.Context;
 
 namespace Core.TraceIdLogic.TraceIdAccessors
@@ -21,9 +22,9 @@ namespace Core.TraceIdLogic.TraceIdAccessors
             {
                 value = Guid.NewGuid().ToString();
             }
-
             this.value = value;
             LogContext.PushProperty("TraceId", value);
         }
     }
 }
+

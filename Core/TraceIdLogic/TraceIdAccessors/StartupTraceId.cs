@@ -1,4 +1,5 @@
-﻿using Core.TraceLogic.TraceWriters;
+﻿using Core.TraceLogic.TraceReaders;
+using Core.TraceLogic.TraceWriters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
