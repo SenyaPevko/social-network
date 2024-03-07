@@ -4,9 +4,7 @@ namespace Core.HttpLogic.Polly
 {
     internal interface IHttpPolicy
     {
-        IAsyncPolicy GetRetryPolicy(
-            int retryCount = 3,
-            int retryIntervalInSeconds = 5);
+        IAsyncPolicy GetRetryPolicy(TimeSpan retryInterval, int retryCount = 3);
 
         IAsyncPolicy GetTimeoutPolicy(TimeSpan timeout);
     }

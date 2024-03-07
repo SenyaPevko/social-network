@@ -11,15 +11,13 @@ namespace Core.HttpLogic.Polly
             this.logger = logger;
         }
 
-        public IAsyncPolicy GetRetryPolicy(
-            int retryCount = 3,
-            int retryIntervalInSeconds = 5)
+        public IAsyncPolicy GetRetryPolicy(TimeSpan retryInterval, int retryCount = 3)
         {
             return Policy
                 .Handle<HttpRequestException>()
                 .Or<TaskCanceledException>()
-                .WaitAndRetryAsync(retryCount, retryAttempt => TimeSpan.
-                FromSeconds(retryIntervalInSeconds), (exception, timeSpan, retryCount, context) =>
+                .WaitAndRetryAsync(retryCount, retryAttempt => retryInterval,
+                (exception, timeSpan, retryCount, context) =>
                 {   
                     logger.LogWarning($"Retry {retryCount} due to {exception}");
                 });
