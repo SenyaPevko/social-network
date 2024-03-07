@@ -1,4 +1,6 @@
 ﻿using Core.HttpLogic.HttpConnections.Models;
+using Core.HttpLogic.Polly;
+using Polly;
 
 namespace Core.HttpLogic.HttpConnections.Services
 {
@@ -6,10 +8,12 @@ namespace Core.HttpLogic.HttpConnections.Services
     internal class HttpConnectionService : IHttpConnectionService
     {
         private readonly IHttpClientFactory httpClientFactory;
+        private readonly IHttpPolicy httpPolicy;
 
-        public HttpConnectionService(IHttpClientFactory httpClientFactory)
+        public HttpConnectionService(IHttpClientFactory httpClientFactory, IHttpPolicy httpPolicy)
         {
             this.httpClientFactory = httpClientFactory;
+            this.httpPolicy = httpPolicy;
         }
 
         /// <inheritdoc />
@@ -34,7 +38,12 @@ namespace Core.HttpLogic.HttpConnections.Services
             CancellationToken cancellationToken,
             HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead)
         {
-            var response = await httpClient.SendAsync(httpRequestMessage, httpCompletionOption, cancellationToken);
+            var retryPolicy = httpPolicy.GetRetryPolicy();
+            var timeoutPolicy = httpPolicy.GetTimeoutPolicy(TimeSpan.FromSeconds(10));
+            var policyWrap = Policy.WrapAsync(retryPolicy, timeoutPolicy);
+            var response = await policyWrap.ExecuteAsync(() => httpClient
+                .SendAsync(httpRequestMessage, httpCompletionOption, cancellationToken));
+            
             return response;
         }
     }

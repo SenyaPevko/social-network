@@ -4,6 +4,8 @@ using Core.HttpLogic.HttpConnections.Models;
 using Core.HttpLogic.HttpResponses.Models;
 using Core.HttpLogic.HttpRequests.Models;
 using Core.HttpLogic.HttpRequests.Parsers;
+using Core.HttpLogic.Polly;
+using Polly;
 
 namespace Core.HttpLogic.HttpRequests.Services
 {
@@ -13,15 +15,18 @@ namespace Core.HttpLogic.HttpRequests.Services
         private readonly IHttpConnectionService httpConnectionService;
         private readonly IEnumerable<ITraceWriter> traceWriterList;
         private readonly IHttpContentParser<ContentType> httpContentParser;
+        private readonly IHttpPolicy httpPolicy;
 
         public HttpRequestService(
             IHttpConnectionService httpConnectionService,
             IEnumerable<ITraceWriter> traceWriterList,
-            IHttpContentParser<ContentType> httpContentParser)
+            IHttpContentParser<ContentType> httpContentParser,
+            IHttpPolicy httpPolicy)
         {
             this.httpConnectionService = httpConnectionService;
             this.traceWriterList = traceWriterList;
             this.httpContentParser = httpContentParser;
+            this.httpPolicy = httpPolicy;
         }
 
         /// <inheritdoc />
@@ -44,8 +49,11 @@ namespace Core.HttpLogic.HttpRequests.Services
             {
                 httpRequestMessage.Headers.Add(traceWriter.Name, traceWriter.GetValue());
             }
-
-            var response = await httpConnectionService.SendRequestAsync(httpRequestMessage, client, default);
+            var retryPolicy = httpPolicy.GetRetryPolicy();
+            var timeoutPolicy = httpPolicy.GetTimeoutPolicy(TimeSpan.FromSeconds(10));
+            var policyWrap = Policy.WrapAsync(retryPolicy, timeoutPolicy);
+            var response = await policyWrap.ExecuteAsync(() => httpConnectionService
+                .SendRequestAsync(httpRequestMessage, client, default));
             var responseContent = await httpContentParser.ParseFromHttpContent<TResponse>(response.Content, requestData.ContentType);
             
             return new HttpResponse<TResponse>()
