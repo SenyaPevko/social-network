@@ -12,16 +12,16 @@ namespace Core.HttpLogic.HttpRequests.Services
     {
         private readonly IHttpConnectionService httpConnectionService;
         private readonly IEnumerable<ITraceWriter> traceWriterList;
-        private readonly IToHttpContentParser<ContentType> contentTypeParser;
+        private readonly IHttpContentParser<ContentType> httpContentParser;
 
         public HttpRequestService(
             IHttpConnectionService httpConnectionService,
             IEnumerable<ITraceWriter> traceWriterList,
-            IToHttpContentParser<ContentType> contentTypeParser)
+            IHttpContentParser<ContentType> contentTypeParser)
         {
             this.httpConnectionService = httpConnectionService;
             this.traceWriterList = traceWriterList;
-            this.contentTypeParser = contentTypeParser;
+            this.httpContentParser = contentTypeParser;
         }
 
         /// <inheritdoc />
@@ -29,17 +29,32 @@ namespace Core.HttpLogic.HttpRequests.Services
             HttpRequestData requestData,
             HttpConnectionData connectionData = default)
         {
+            ArgumentNullException.ThrowIfNull(requestData);
+
             var client = httpConnectionService.CreateHttpClient(connectionData);
+            var content = httpContentParser.ParseToHttpContent(requestData.Body, requestData.ContentType);
 
             // это обогащение запроса некимим заголовками для последующего востановления с помощью trace id
-            var httpRequestMessage = new HttpRequestMessage();
+            var httpRequestMessage = new HttpRequestMessage()
+            {
+                Method = requestData.Method,
+                RequestUri = requestData.Uri, 
+                Content = content
+            };
             // тут происходит сборка trace'ов и добавление их в меседж котоорой пойдет в запрос
             foreach (var traceWriter in traceWriterList)
             {
                 httpRequestMessage.Headers.Add(traceWriter.Name, traceWriter.GetValue());
             }
-            var res = await httpConnectionService.SendRequestAsync(httpRequestMessage, client, default);
-            return null;
+            var response = await httpConnectionService.SendRequestAsync(httpRequestMessage, client, default);
+            var responseContent = await httpContentParser.ParseFromHttpContent<TResponse>(response.Content, requestData.ContentType);
+            return new HttpResponse<TResponse>()
+            {
+                Body = responseContent,
+                StatusCode = response.StatusCode,
+                Headers = response.Headers,
+                ContentHeaders = response.Content.Headers,
+            };
         }
     }
 }
