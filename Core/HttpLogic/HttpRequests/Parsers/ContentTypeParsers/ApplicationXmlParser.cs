@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
+﻿using System.Net.Mime;
 using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
 {
@@ -19,6 +16,14 @@ namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
             }
 
             return new StringContent(s, Encoding.UTF8, MediaTypeNames.Application.Xml);
+        }
+
+        public async Task<T> Parse<T>(HttpContent content)
+        {
+            var serializer = new XmlSerializer(typeof(T));
+            var desirializedBody = (T)serializer.Deserialize(await content.ReadAsStreamAsync());
+
+            return desirializedBody;
         }
     }
 }

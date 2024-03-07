@@ -1,7 +1,4 @@
-﻿
-using System.Net.Mime;
-
-namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
+﻿namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
 {
     internal class XWwwFormUrlEncodedParser : IContentTypeParser
     {
@@ -16,6 +13,13 @@ namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
             }
 
             return new FormUrlEncodedContent(list);
+        }
+
+        public async Task<T> Parse<T>(HttpContent content)
+        {
+            var body = await content.ReadAsStringAsync();
+
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(body);
         }
     }
 }

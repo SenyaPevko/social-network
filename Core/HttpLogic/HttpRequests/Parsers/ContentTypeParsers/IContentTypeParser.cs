@@ -4,5 +4,6 @@
     {
         public ContentType SupportedContentType { get; }
         public HttpContent Parse(object body);
+        public Task<T> Parse<T>(HttpContent content);
     }
 }

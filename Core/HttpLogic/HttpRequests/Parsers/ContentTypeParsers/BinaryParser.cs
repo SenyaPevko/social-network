@@ -1,4 +1,5 @@
 ﻿
+using System.Net.Http;
 using System.Net.Mime;
 
 namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
@@ -15,6 +16,14 @@ namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
             }
 
             return new ByteArrayContent((byte[])body);
+        }
+
+        public async Task<T> Parse<T>(HttpContent content)
+        {
+            var body = await content.ReadAsByteArrayAsync();
+            var desirializedBody = (T)(object)body;
+
+            return desirializedBody;
         }
     }
 }

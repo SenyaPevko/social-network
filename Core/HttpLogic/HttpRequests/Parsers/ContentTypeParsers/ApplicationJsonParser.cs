@@ -1,5 +1,4 @@
-﻿
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Net.Mime;
 using System.Text;
@@ -25,6 +24,14 @@ namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
             var serializedBody = JsonConvert.SerializeObject(body, serializeSettings);
             var content = new StringContent(serializedBody, Encoding.UTF8, MediaTypeNames.Application.Json);
             return content;
+        }
+
+        public async Task<T> Parse<T>(HttpContent content)
+        {
+            var body = await content.ReadAsStringAsync();
+            var desirializedBody = JsonConvert.DeserializeObject<T>(body);
+
+            return desirializedBody;
         }
     }
 }
