@@ -2,7 +2,7 @@
 
 namespace Core.HttpLogic.HttpRequests.Parsers
 {
-    internal class ContentTypeParser : IToHttpContentParser<ContentType>
+    internal class ContentTypeParser : IHttpContentParser<ContentType>
     {
         private readonly IEnumerable<IContentTypeParser> parsers;
 
@@ -11,12 +11,19 @@ namespace Core.HttpLogic.HttpRequests.Parsers
             this.parsers = parsers;
         }
 
-        public HttpContent Parse(object body, ContentType contentType)
+        public HttpContent ParseToHttpContent(object body, ContentType contentType)
         {
             var parser = parsers.First(parser => parser.SupportedContentType == contentType)
                 ?? throw new ArgumentOutOfRangeException(nameof(contentType), contentType, null);
 
             return parser.Parse(body);
+        }
+        public async Task<TContent> ParseFromHttpContent<TContent>(HttpContent content, ContentType contentType)
+        {
+            var parser = parsers.First(parser => parser.SupportedContentType == contentType)
+                ?? throw new ArgumentOutOfRangeException(nameof(contentType), contentType, null);
+
+            return await parser.Parse<TContent>(content);
         }
     }
 }
