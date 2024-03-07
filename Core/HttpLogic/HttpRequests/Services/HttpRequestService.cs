@@ -44,6 +44,7 @@ namespace Core.HttpLogic.HttpRequests.Services
             {
                 httpRequestMessage.Headers.Add(traceWriter.Name, traceWriter.GetValue());
             }
+
             var response = await httpConnectionService.SendRequestAsync(httpRequestMessage, client, default);
             var responseContent = await httpContentParser.ParseFromHttpContent<TResponse>(response.Content, requestData.ContentType);
             
