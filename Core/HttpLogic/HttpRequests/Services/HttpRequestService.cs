@@ -49,8 +49,8 @@ namespace Core.HttpLogic.HttpRequests.Services
             {
                 httpRequestMessage.Headers.Add(traceWriter.Name, traceWriter.GetValue());
             }
-            var retryPolicy = httpPolicy.GetRetryPolicy();
-            var timeoutPolicy = httpPolicy.GetTimeoutPolicy(TimeSpan.FromSeconds(10));
+            var retryPolicy = httpPolicy.GetRetryPolicy(requestData.RetryInterval, requestData.RetryCount);
+            var timeoutPolicy = httpPolicy.GetTimeoutPolicy(requestData.ResponseAwaitTime);
             var policyWrap = Policy.WrapAsync(retryPolicy, timeoutPolicy);
             var response = await policyWrap.ExecuteAsync(() => httpConnectionService
                 .SendRequestAsync(httpRequestMessage, client, default));
