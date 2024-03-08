@@ -3,7 +3,7 @@ using IdentityConnectionLib.DtoModels.UserInfoLists;
 
 namespace IdentityConnectionLib.Services
 {
-    internal interface IIdentityConnectionService
+    public interface IIdentityConnectionService
     {
         Task<UserInfoListIdentityServiceApiResponse> GetUserInfoListAsync(UserInfoListIdentityServiceApiRequest request);
         Task<ProfileInfoListIdentityServiceApiResponse> GetProfileInfoListAsync(ProfileInfoListIdentityServiceApiRequest request);
