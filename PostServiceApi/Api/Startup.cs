@@ -3,16 +3,19 @@ using Application.Comments.Mappers;
 using Application.Comments.Services;
 using Application.PostLikes.Mappers;
 using Application.PostLikes.Services;
-using Application.Posts.Mappers;
+using Application.Posts.Mappers.InputModelMapper;
+using Application.Posts.Mappers.ViewModelMapper;
 using Application.Posts.Services;
 using Application.Tags.Mappers;
 using Application.Tags.Services;
+using Domain.Clients.PostUsersInfo;
 using Domain.Comments;
 using Domain.PostLikes;
 using Domain.Posts;
 using Domain.Tags;
 using Infrastructure;
 using Infrastructure.Comments;
+using Infrastructure.Connections;
 using Infrastructure.PostLikes;
 using Infrastructure.Posts;
 using Infrastructure.Tags;
@@ -37,6 +40,7 @@ namespace Api
             ConfigureSwagger(services);
             AddMappers(services);
             AddRepositories(services);
+            AddConnections(services);
             AddServices(services);
             AddMiddleWares(services);
         }
@@ -97,11 +101,17 @@ namespace Api
             services.AddScoped<ITagService, TagService>();
         }
 
+        private static void AddConnections(IServiceCollection services)
+        {
+            services.AddScoped<IPostUserInfoServiceClient, PostUserInfoServiceClient>();
+        }
+
         private static void AddMappers(IServiceCollection services)
         {
             services.AddScoped<ICommentViewModelMapper, CommentViewModelMapper>();
             services.AddScoped<IPostLikeViewModelMapper, PostLikeViewModelMapper>();
             services.AddScoped<ITagViewModelMapper, TagViewModelMapper>();
+            services.AddScoped<IPostInputModelMapper, PostInputModelMapper>();
             services.AddScoped<IPostViewModelMapper, PostViewModelMapper>();
         }
 
