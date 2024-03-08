@@ -13,18 +13,18 @@ namespace Core.HttpLogic.HttpRequests.Services
     internal class HttpRequestService : IHttpRequestService
     {
         private readonly IHttpConnectionService httpConnectionService;
-        private readonly IEnumerable<ITraceWriter> traceWriterList;
+        private readonly IEnumerable<ITraceReader> traceReadersList;
         private readonly IHttpContentParser<ContentType> httpContentParser;
         private readonly IHttpPolicy httpPolicy;
 
         public HttpRequestService(
             IHttpConnectionService httpConnectionService,
-            IEnumerable<ITraceWriter> traceWriterList,
+            IEnumerable<ITraceReader> traceReadersList,
             IHttpContentParser<ContentType> httpContentParser,
             IHttpPolicy httpPolicy)
         {
             this.httpConnectionService = httpConnectionService;
-            this.traceWriterList = traceWriterList;
+            this.traceReadersList = traceReadersList;
             this.httpContentParser = httpContentParser;
             this.httpPolicy = httpPolicy;
         }
@@ -45,9 +45,9 @@ namespace Core.HttpLogic.HttpRequests.Services
                 RequestUri = requestData.Uri, 
                 Content = content
             };
-            foreach (var traceWriter in traceWriterList)
+            foreach (var traceReader in traceReadersList)
             {
-                httpRequestMessage.Headers.Add(traceWriter.Name, traceWriter.GetValue());
+                httpRequestMessage.Headers.Add(traceReader.Name, traceReader.GetValue());
             }
             var retryPolicy = httpPolicy.GetRetryPolicy(requestData.RetryInterval, requestData.RetryCount);
             var timeoutPolicy = httpPolicy.GetTimeoutPolicy(requestData.ResponseAwaitTime);

@@ -4,7 +4,7 @@ using Serilog.Context;
 
 namespace Core.TraceIdLogic.TraceIdAccessors
 {
-    internal class TraceIdAccessor : ITraceReader, ITraceWriter, ITraceIdAccessor
+    internal class TraceIdAccessor : ITraceWriter, ITraceReader, ITraceIdAccessor
     {
         public string Name => "TraceId";
 
@@ -17,12 +17,7 @@ namespace Core.TraceIdLogic.TraceIdAccessors
 
         public void WriteValue(string value)
         {
-            // на случай если это первый в цепочке сервис и до этого не было traceId
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                value = Guid.NewGuid().ToString();
-            }
-            this.value = value;
+            this.value = string.IsNullOrWhiteSpace(value) ? value = Guid.NewGuid().ToString() : value;
             LogContext.PushProperty("TraceId", value);
         }
     }

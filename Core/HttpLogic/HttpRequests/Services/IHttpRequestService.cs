@@ -1,5 +1,4 @@
 ﻿using Core.HttpLogic.HttpConnections.Models;
-using Core.HttpLogic.HttpConnections.Services;
 using Core.HttpLogic.HttpRequests.Models;
 using Core.HttpLogic.HttpResponses.Models;
 
@@ -8,7 +7,7 @@ namespace Core.HttpLogic.HttpRequests.Services
     /// <summary>
     /// Sending http requests and handling responses
     /// </summary>
-    internal interface IHttpRequestService
+    public interface IHttpRequestService
     {
         /// <summary>
         /// Send http request

@@ -5,7 +5,7 @@
     ///
     ///  // для HTTP мы создаем middleware и  в нем это делаем 
     /// </summary>
-    public interface ITraceReader
+    public interface ITraceWriter
     {
         string Name { get; }
 

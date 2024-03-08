@@ -3,7 +3,7 @@
     /// <summary>
     /// Recording trace values when sending a request
     /// </summary>
-    public interface ITraceWriter
+    public interface ITraceReader
     {
         string Name { get; }
 

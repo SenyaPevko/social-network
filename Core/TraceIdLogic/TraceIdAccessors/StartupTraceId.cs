@@ -11,9 +11,9 @@ namespace Core.TraceIdLogic.TraceIdAccessors
         {
             serviceCollection.AddScoped<TraceIdAccessor>();
             serviceCollection
-                .TryAddScoped<ITraceWriter>(provider => provider.GetRequiredService<TraceIdAccessor>());
-            serviceCollection
                 .TryAddScoped<ITraceReader>(provider => provider.GetRequiredService<TraceIdAccessor>());
+            serviceCollection
+                .TryAddScoped<ITraceWriter>(provider => provider.GetRequiredService<TraceIdAccessor>());
             serviceCollection
                 .TryAddScoped<ITraceIdAccessor>(provider => provider.GetRequiredService<TraceIdAccessor>());
 
