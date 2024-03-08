@@ -56,7 +56,7 @@ namespace Api.Controllers.Users
             return Ok(response);
         }
 
-        [HttpGet("oi")]
+        [HttpGet("list")]
         [Produces("application/json", "application/xml")]
         [ProducesResponseType(typeof(UserInfoListIdentityServiceApiResponse), 200)]
         public async Task<IActionResult> GetUsersInfoAsync([FromBody] UserInfoListIdentityServiceApiRequest request)
