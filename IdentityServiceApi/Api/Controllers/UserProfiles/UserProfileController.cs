@@ -1,12 +1,10 @@
 ﻿using Api.Controllers.UserProfiles.Requests;
 using Api.Controllers.UserProfiles.Responses;
-using Api.Controllers.Users.Requests;
-using Api.Controllers.Users.Responses;
 using AutoMapper;
+using IdentityConnectionLib.DtoModels.ProfileInfo;
+using IdentityConnectionLib.DtoModels.UserInfoLists;
 using Logic.UserProfiles.Managers;
 using Logic.UserProfiles.Models;
-using Logic.Users.Managers;
-using Logic.Users.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.UserProfiles
@@ -46,6 +44,25 @@ namespace Api.Controllers.UserProfiles
             var response = new CreateUserProfileResponse { Id = res };
 
             return StatusCode(201, response);
+        }
+
+        [HttpGet("profiles")]
+        [Produces("application/json", "application/xml")]
+        [ProducesResponseType(typeof(ProfileInfoListIdentityServiceApiResponse), 200)]
+        public async Task<IActionResult> GetProfilesInfoAsync([FromBody] ProfileInfoListIdentityServiceApiRequest request)
+        {
+            var profilesList = new List<ProfileInfo>();
+            foreach (var id in request.UsersId)
+            {
+                var user = await userLogicManager.GetUserAsync(id);
+                profilesList.Add(new ProfileInfo()
+                {
+
+                });
+            }
+            var response = new UserInfoListIdentityServiceApiResponse() { UsersInfo = profilesList.ToArray() };
+
+            return Ok(response);
         }
     }
 }
