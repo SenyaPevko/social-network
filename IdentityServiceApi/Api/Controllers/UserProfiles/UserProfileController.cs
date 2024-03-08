@@ -2,7 +2,6 @@
 using Api.Controllers.UserProfiles.Responses;
 using AutoMapper;
 using IdentityConnectionLib.DtoModels.ProfileInfo;
-using IdentityConnectionLib.DtoModels.UserInfoLists;
 using Logic.UserProfiles.Managers;
 using Logic.UserProfiles.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +10,7 @@ namespace Api.Controllers.UserProfiles
 {
     [Route("/api/users")]
     [Controller]
-    public class UserProfileController: ControllerBase
+    public class UserProfileController : ControllerBase
     {
         private readonly IUserProfileLogicManager profileLogicManager;
         private readonly IMapper mapper;
@@ -54,13 +53,14 @@ namespace Api.Controllers.UserProfiles
             var profilesList = new List<ProfileInfo>();
             foreach (var id in request.UsersId)
             {
-                var user = await userLogicManager.GetUserAsync(id);
+                var profile = await profileLogicManager.GetUserProfileByUserIdAsync(id);
                 profilesList.Add(new ProfileInfo()
                 {
-
+                    Avatar = profile.AvatarUrl,
+                    Status = profile.Status
                 });
             }
-            var response = new UserInfoListIdentityServiceApiResponse() { UsersInfo = profilesList.ToArray() };
+            var response = new ProfileInfoListIdentityServiceApiResponse() { ProfilesInfo = profilesList.ToArray() };
 
             return Ok(response);
         }
