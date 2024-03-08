@@ -1,7 +1,8 @@
 ﻿using Application.Tags;
+using Domain.Clients.PostUsersInfo;
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.Posts
+namespace Application.Posts.Models
 {
     public record PostViewModel
     {
@@ -45,12 +46,17 @@ namespace Application.Posts
         /// The date and time when the post was last updated
         /// </summary>
         [Required]
-        public DateTime UpdatedAt { get; init; }
+        public required DateTime UpdatedAt { get; init; }
 
         /// <summary>
         /// The tags that were asigned to the post
         /// </summary>
         [Required]
         public ICollection<TagViewModel> Tags { get; init; } = null!;
+        /// <summary>
+        /// Info about user that post shows
+        /// </summary>
+        [Required]
+        public PostUserInfo PostUserInfo { get; init; } = null!;
     }
 }
