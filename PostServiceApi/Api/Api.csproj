@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -22,7 +22,10 @@
 
   <ItemGroup>
     <Reference Include="Core">
-      <HintPath>..\..\Core\bin\Debug\net8.0\Core.dll</HintPath>
+      <HintPath>..\..\Core\Core\bin\Debug\net8.0\Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IdentityConnectionLib">
+      <HintPath>..\..\Core\IdentityConnectionLib\bin\Debug\net8.0\IdentityConnectionLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 

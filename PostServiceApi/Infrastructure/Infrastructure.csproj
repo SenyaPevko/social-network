@@ -16,10 +16,10 @@
 
   <ItemGroup>
     <Reference Include="Core">
-      <HintPath>..\..\Core\obj\Debug\net8.0\Core.dll</HintPath>
+      <HintPath>..\..\Core\Core\bin\Debug\net8.0\Core.dll</HintPath>
     </Reference>
     <Reference Include="IdentityConnectionLib">
-      <HintPath>..\..\IdentityConnectionLib\bin\Debug\net8.0\IdentityConnectionLib.dll</HintPath>
+      <HintPath>..\..\Core\IdentityConnectionLib\bin\Debug\net8.0\IdentityConnectionLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 
