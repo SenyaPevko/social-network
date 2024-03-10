@@ -5,9 +5,15 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Core.TraceIdLogic.TraceIdAccessors
 {
+    /// <summary>
+    /// Registrating tracing services into di container
+    /// </summary>
     public static class StartupTraceId
     {
-        public static IServiceCollection TryAddTraceId(this IServiceCollection serviceCollection)
+        /// <summary>
+        /// Adding services to trace id
+        /// </summary>
+        public static IServiceCollection AddTraceId(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<TraceIdAccessor>();
             serviceCollection
