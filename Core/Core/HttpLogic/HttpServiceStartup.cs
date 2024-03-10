@@ -1,5 +1,6 @@
 ﻿using Core.HttpLogic.HttpConnections.Services;
 using Core.HttpLogic.HttpRequests.Services;
+using Core.HttpLogic.Polly;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -20,6 +21,7 @@ namespace Core.HttpLogic
                 .AddHttpClient()
                 .AddTransient<IHttpConnectionService, HttpConnectionService>();
             
+            services.TryAddTransient<IHttpPolicy, HttpPolicy>();
             services.TryAddTransient<IHttpRequestService, HttpRequestService>();
 
             return services;
