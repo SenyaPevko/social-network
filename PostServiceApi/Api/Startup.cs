@@ -8,11 +8,16 @@ using Application.Posts.Mappers.ViewModelMapper;
 using Application.Posts.Services;
 using Application.Tags.Mappers;
 using Application.Tags.Services;
+using Core.HttpLogic;
+using Core.Logs;
+using Core.TraceIdLogic.TraceIdAccessors;
+using Core.TraceLogic.TraceReaders;
 using Domain.Clients.PostUsersInfo;
 using Domain.Comments;
 using Domain.PostLikes;
 using Domain.Posts;
 using Domain.Tags;
+using IdentityConnectionLib;
 using Infrastructure;
 using Infrastructure.Comments;
 using Infrastructure.Connections;
@@ -39,6 +44,9 @@ namespace Api
             ConfigureControllers(services);
             ConfigureSwagger(services);
             AddMappers(services);
+            AddHttpRequestServices(services);
+            AddLoggerServices(services);
+            AddTracingServices(services);
             AddRepositories(services);
             AddConnections(services);
             AddServices(services);
@@ -108,12 +116,19 @@ namespace Api
 
         private static void AddHttpRequestServices(IServiceCollection services)
         {
-            services.AddScoped<I>
+            services.AddHttpServices();
+            services.AddIdentityConnectionLibServices();
         }
 
         private static void AddTracingServices(IServiceCollection services)
         {
+            services.AddTraceId();
+            services.AddTransient<ITraceWriter>();
+        }
 
+        private static void AddLoggerServices(IServiceCollection services)
+        {
+            services.AddLoggerServices();
         }
 
         private static void AddMappers(IServiceCollection services)
