@@ -5,10 +5,12 @@ using System.Text;
 
 namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
 {
+    /// <inheritdoc />
     internal class ApplicationJsonParser : IContentTypeParser
     {
         public ContentType SupportedContentType => ContentType.ApplicationJson;
 
+        /// <inheritdoc />
         public HttpContent Parse(object body)
         {
             if (body is string stringBody)
@@ -26,6 +28,7 @@ namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
             return content;
         }
 
+        /// <inheritdoc />
         public async Task<T> Parse<T>(HttpContent content)
         {
             var body = await content.ReadAsStringAsync();

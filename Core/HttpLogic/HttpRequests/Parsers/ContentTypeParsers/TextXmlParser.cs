@@ -4,10 +4,12 @@ using System.Xml.Serialization;
 
 namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
 {
+    /// <inheritdoc />
     internal class TextXmlParser : IContentTypeParser
     {
         public ContentType SupportedContentType => ContentType.TextXml;
 
+        /// <inheritdoc />
         public HttpContent Parse(object body)
         {
             if (body is not string s)
@@ -18,6 +20,7 @@ namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
             return new StringContent(s, Encoding.UTF8, MediaTypeNames.Text.Xml);
         }
 
+        /// <inheritdoc />
         public async Task<T> Parse<T>(HttpContent content)
         {
             var body = await content.ReadAsStringAsync();

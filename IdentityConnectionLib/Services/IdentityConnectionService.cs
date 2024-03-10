@@ -9,6 +9,7 @@ using IdentityConnectionLib.ResponseHandlers;
 
 namespace IdentityConnectionLib.Services
 {
+    /// <inheritdoc />
     public class IdentityConnectionService : IIdentityConnectionService
     {
         private readonly IHttpRequestService httpClientFactory;
@@ -28,6 +29,7 @@ namespace IdentityConnectionLib.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<ProfileInfoListIdentityServiceApiResponse> GetProfileInfoListAsync(ProfileInfoListIdentityServiceApiRequest request)
         {
             var requestData = new HttpRequestData()
@@ -48,6 +50,7 @@ namespace IdentityConnectionLib.Services
             return response.Body;
         }
 
+        /// <inheritdoc />
         public async Task<UserInfoListIdentityServiceApiResponse> GetUserInfoListAsync(UserInfoListIdentityServiceApiRequest request)
         {
             var requestData = new HttpRequestData()

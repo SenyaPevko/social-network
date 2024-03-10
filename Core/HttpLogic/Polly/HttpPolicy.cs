@@ -3,6 +3,7 @@ using Polly;
 
 namespace Core.HttpLogic.Polly
 {
+    /// <inheritdoc />
     internal class HttpPolicy : IHttpPolicy
     {
         private readonly ILogger logger;
@@ -11,6 +12,7 @@ namespace Core.HttpLogic.Polly
             this.logger = logger;
         }
 
+        /// <inheritdoc />
         public IAsyncPolicy GetRetryPolicy(TimeSpan retryInterval, int retryCount = 3)
         {
             return Policy
@@ -23,6 +25,7 @@ namespace Core.HttpLogic.Polly
                 });
         }
 
+        /// <inheritdoc />
         public IAsyncPolicy GetTimeoutPolicy(TimeSpan timeout)
         {
             return Policy.TimeoutAsync(timeout);

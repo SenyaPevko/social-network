@@ -106,6 +106,16 @@ namespace Api
             services.AddScoped<IPostUserInfoServiceClient, PostUserInfoServiceClient>();
         }
 
+        private static void AddHttpRequestServices(IServiceCollection services)
+        {
+            services.AddScoped<I>
+        }
+
+        private static void AddTracingServices(IServiceCollection services)
+        {
+
+        }
+
         private static void AddMappers(IServiceCollection services)
         {
             services.AddScoped<ICommentViewModelMapper, CommentViewModelMapper>();

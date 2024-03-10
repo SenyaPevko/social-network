@@ -2,8 +2,10 @@
 
 namespace IdentityConnectionLib.ResponseHandlers
 {
+    /// <inheritdoc />
     public class ResponseHandler : IResponseHandler
     {
+        /// <inheritdoc />
         public void HandleErrorResponse(HttpStatusCode statusCode)
         {
             switch (statusCode)

@@ -2,6 +2,7 @@
 
 namespace Core.HttpLogic.HttpRequests.Parsers
 {
+    /// <inheritdoc />
     internal class ContentTypeParser : IHttpContentParser<ContentType>
     {
         private readonly IEnumerable<IContentTypeParser> parsers;
@@ -11,6 +12,7 @@ namespace Core.HttpLogic.HttpRequests.Parsers
             this.parsers = parsers;
         }
 
+        /// <inheritdoc />
         public HttpContent ParseToHttpContent(object body, ContentType contentType)
         {
             var parser = parsers.First(parser => parser.SupportedContentType == contentType)
@@ -18,6 +20,8 @@ namespace Core.HttpLogic.HttpRequests.Parsers
 
             return parser.Parse(body);
         }
+
+        /// <inheritdoc />
         public async Task<TContent> ParseFromHttpContent<TContent>(HttpContent content, ContentType contentType)
         {
             var parser = parsers.First(parser => parser.SupportedContentType == contentType)
