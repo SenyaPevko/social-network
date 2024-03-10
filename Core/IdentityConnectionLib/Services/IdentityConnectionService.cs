@@ -15,7 +15,10 @@ namespace IdentityConnectionLib.Services
         private readonly IHttpRequestService httpClientFactory;
         private readonly IResponseHandler responseHandler;
 
-        public IdentityConnectionService(IConfiguration configuration, IServiceProvider serviceProvider, IResponseHandler responseHandler)
+        public IdentityConnectionService(
+            IConfiguration configuration,
+            IServiceProvider serviceProvider,
+            IResponseHandler responseHandler)
         {
             this.responseHandler = responseHandler;
 
@@ -30,7 +33,8 @@ namespace IdentityConnectionLib.Services
         }
 
         /// <inheritdoc />
-        public async Task<ProfileInfoListIdentityServiceApiResponse> GetProfileInfoListAsync(ProfileInfoListIdentityServiceApiRequest request)
+        public async Task<ProfileInfoListIdentityServiceApiResponse> GetProfileInfoListAsync(
+            ProfileInfoListIdentityServiceApiRequest request)
         {
             var requestData = new HttpRequestData()
             {
@@ -51,7 +55,8 @@ namespace IdentityConnectionLib.Services
         }
 
         /// <inheritdoc />
-        public async Task<UserInfoListIdentityServiceApiResponse> GetUserInfoListAsync(UserInfoListIdentityServiceApiRequest request)
+        public async Task<UserInfoListIdentityServiceApiResponse> GetUserInfoListAsync(
+            UserInfoListIdentityServiceApiRequest request)
         {
             var requestData = new HttpRequestData()
             {
