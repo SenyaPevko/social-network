@@ -1,4 +1,7 @@
 ﻿using Core.HttpLogic.HttpConnections.Services;
+using Core.HttpLogic.HttpRequests;
+using Core.HttpLogic.HttpRequests.Parsers;
+using Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers;
 using Core.HttpLogic.HttpRequests.Services;
 using Core.HttpLogic.Polly;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +26,20 @@ namespace Core.HttpLogic
             
             services.TryAddTransient<IHttpPolicy, HttpPolicy>();
             services.TryAddTransient<IHttpRequestService, HttpRequestService>();
+            services.AddHttpContentParsers();
+
+            return services;
+        }
+
+        private static IServiceCollection AddHttpContentParsers(this IServiceCollection services)
+        {
+            services.AddScoped<IHttpContentParser<ContentType>, ContentTypeParser>();
+
+            services.AddScoped<IContentTypeParser, ApplicationJsonParser>();
+            services.AddScoped<IContentTypeParser, ApplicationXmlParser>();
+            services.AddScoped<IContentTypeParser, BinaryParser>();
+            services.AddScoped<IContentTypeParser, TextXmlParser>();
+            services.AddScoped<IContentTypeParser, XWwwFormUrlEncodedParser>();
 
             return services;
         }
