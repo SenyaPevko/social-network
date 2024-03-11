@@ -38,6 +38,7 @@ bld/
 **/values.dev.yaml
 LICENSE
 README.md
+*.idea
 
 # Docker
 Dockerfile
