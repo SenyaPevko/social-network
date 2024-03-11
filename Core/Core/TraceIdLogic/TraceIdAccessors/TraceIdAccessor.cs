@@ -18,7 +18,7 @@ namespace Core.TraceIdLogic.TraceIdAccessors
         public void WriteValue(string value)
         {
             this.value = string.IsNullOrWhiteSpace(value) ? value = Guid.NewGuid().ToString() : value;
-            LogContext.PushProperty("TraceId", value);
+            LogContext.PushProperty(Name, value);
         }
     }
 }
