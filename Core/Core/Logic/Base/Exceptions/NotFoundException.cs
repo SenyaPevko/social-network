@@ -1,7 +1,8 @@
-﻿namespace Core.Logic.Base.Exceptions
+﻿namespace Core.Logic.Base.Exceptions;
+
+public abstract class NotFoundException : Exception
 {
-    public abstract class NotFoundException : Exception
+    protected NotFoundException(string message) : base(message)
     {
-        protected NotFoundException(string message) : base(message) { }
     }
 }

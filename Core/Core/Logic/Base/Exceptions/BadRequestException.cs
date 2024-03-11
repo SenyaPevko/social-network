@@ -1,7 +1,8 @@
-﻿namespace Core.Logic.Base.Exceptions
+﻿namespace Core.Logic.Base.Exceptions;
+
+public abstract class BadRequestException : Exception
 {
-    public abstract class BadRequestException : Exception
+    protected BadRequestException(string message) : base(message)
     {
-        protected BadRequestException(string message) : base(message) { }
     }
 }

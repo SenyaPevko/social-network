@@ -1,7 +1,6 @@
-﻿namespace Core.Dal.Base
+﻿namespace Core.Dal.Base;
+
+public record BaseEntity
 {
-    public record BaseEntity
-    {
-        public Guid Id { get; init; }
-    }
+    public Guid Id { get; init; }
 }

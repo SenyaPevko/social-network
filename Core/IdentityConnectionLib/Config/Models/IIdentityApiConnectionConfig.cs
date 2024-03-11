@@ -1,11 +1,10 @@
 ﻿using Core.HttpLogic.Base;
 
-namespace IdentityConnectionLib.Config.Models
+namespace IdentityConnectionLib.Config.Models;
+
+public interface IIdentityApiConnectionConfig
 {
-    public interface IIdentityApiConnectionConfig
-    {
-        ConnectionType ConnectionType { get; }
-        string ProfilesInfoUri { get; }
-        string UsersInfoUri { get; }
-    }
+    ConnectionType ConnectionType { get; }
+    string ProfilesInfoUri { get; }
+    string UsersInfoUri { get; }
 }

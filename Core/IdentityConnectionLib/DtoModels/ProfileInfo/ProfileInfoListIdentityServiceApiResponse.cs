@@ -1,10 +1,9 @@
-﻿namespace IdentityConnectionLib.DtoModels.ProfileInfo
+﻿namespace IdentityConnectionLib.DtoModels.ProfileInfo;
+
+public record ProfileInfoListIdentityServiceApiResponse
 {
-    public record ProfileInfoListIdentityServiceApiResponse
-    {
-        /// <summary>
-        /// Array of profile's information
-        /// </summary>
-        public required ProfileInfo[] ProfilesInfo { get; init; }
-    }
+    /// <summary>
+    ///     Array of profile's information
+    /// </summary>
+    public required ProfileInfo[] ProfilesInfo { get; init; }
 }

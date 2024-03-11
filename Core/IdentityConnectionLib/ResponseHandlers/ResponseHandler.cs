@@ -1,18 +1,17 @@
 ﻿using System.Net;
 
-namespace IdentityConnectionLib.ResponseHandlers
+namespace IdentityConnectionLib.ResponseHandlers;
+
+/// <inheritdoc />
+public class ResponseHandler : IResponseHandler
 {
     /// <inheritdoc />
-    public class ResponseHandler : IResponseHandler
+    public void HandleErrorResponse(HttpStatusCode statusCode)
     {
-        /// <inheritdoc />
-        public void HandleErrorResponse(HttpStatusCode statusCode)
+        switch (statusCode)
         {
-            switch (statusCode)
-            {
-                default:
-                    throw new HttpRequestException($"Request failed with status code: {statusCode}");
-            }
+            default:
+                throw new HttpRequestException($"Request failed with status code: {statusCode}");
         }
     }
 }

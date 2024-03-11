@@ -1,10 +1,9 @@
-﻿namespace IdentityConnectionLib.DtoModels.UserInfoLists
+﻿namespace IdentityConnectionLib.DtoModels.UserInfoLists;
+
+public record UserInfoListIdentityServiceApiResponse
 {
-    public record UserInfoListIdentityServiceApiResponse
-    {
-        /// <summary>
-        /// Array of user's information
-        /// </summary>
-        public required UserInfo[] UsersInfo { get; init; }
-    }
+    /// <summary>
+    ///     Array of user's information
+    /// </summary>
+    public required UserInfo[] UsersInfo { get; init; }
 }

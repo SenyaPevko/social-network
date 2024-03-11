@@ -1,7 +1,5 @@
-﻿namespace Core.TraceIdLogic.TraceIdAccessors
-{
-    internal interface ITraceIdAccessor
-    {
+﻿namespace Core.TraceIdLogic.TraceIdAccessors;
 
-    }
+internal interface ITraceIdAccessor
+{
 }

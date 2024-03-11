@@ -1,8 +1,7 @@
-﻿namespace Core.HttpLogic.Base
+﻿namespace Core.HttpLogic.Base;
+
+public enum ConnectionType
 {
-    public enum ConnectionType
-    {
-        Http = 0,
-        RabitMq = 1,
-    }
+    Http = 0,
+    RabitMq = 1
 }

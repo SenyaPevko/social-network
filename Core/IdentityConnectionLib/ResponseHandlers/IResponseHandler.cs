@@ -1,16 +1,15 @@
 ﻿using System.Net;
 
-namespace IdentityConnectionLib.ResponseHandlers
+namespace IdentityConnectionLib.ResponseHandlers;
+
+/// <summary>
+///     Handles http responses
+/// </summary>
+public interface IResponseHandler
 {
     /// <summary>
-    /// Handles http responses
+    ///     Handles bad http responses that was not successful
     /// </summary>
-    public interface IResponseHandler
-    {
-        /// <summary>
-        /// Handles bad http responses that was not successful
-        /// </summary>
-        /// <param name="statusCode"></param>
-        void HandleErrorResponse(HttpStatusCode statusCode);
-    }
+    /// <param name="statusCode"></param>
+    void HandleErrorResponse(HttpStatusCode statusCode);
 }

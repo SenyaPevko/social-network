@@ -1,28 +1,25 @@
-﻿namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
+﻿namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers;
+
+/// <inheritdoc />
+internal class BinaryParser : IContentTypeParser
 {
+    public ContentType SupportedContentType => ContentType.Binary;
+
     /// <inheritdoc />
-    internal class BinaryParser : IContentTypeParser
+    public HttpContent Parse(object body)
     {
-        public ContentType SupportedContentType => ContentType.Binary;
+        if (body.GetType() != typeof(byte[]))
+            throw new Exception($"Body for content type {SupportedContentType} must be {typeof(byte[]).Name}");
 
-        /// <inheritdoc />
-        public HttpContent Parse(object body)
-        {
-            if (body.GetType() != typeof(byte[]))
-            {
-                throw new Exception($"Body for content type {SupportedContentType} must be {typeof(byte[]).Name}");
-            }
+        return new ByteArrayContent((byte[])body);
+    }
 
-            return new ByteArrayContent((byte[])body);
-        }
+    /// <inheritdoc />
+    public async Task<T> Parse<T>(HttpContent content)
+    {
+        var body = await content.ReadAsByteArrayAsync();
+        var desirializedBody = (T)(object)body;
 
-        /// <inheritdoc />
-        public async Task<T> Parse<T>(HttpContent content)
-        {
-            var body = await content.ReadAsByteArrayAsync();
-            var desirializedBody = (T)(object)body;
-
-            return desirializedBody;
-        }
+        return desirializedBody;
     }
 }

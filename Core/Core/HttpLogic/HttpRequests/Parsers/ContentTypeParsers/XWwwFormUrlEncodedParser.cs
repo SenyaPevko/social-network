@@ -1,28 +1,27 @@
-﻿namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
+﻿using Newtonsoft.Json;
+
+namespace Core.HttpLogic.HttpRequests.Parsers.ContentTypeParsers;
+
+/// <inheritdoc />
+internal class XWwwFormUrlEncodedParser : IContentTypeParser
 {
+    public ContentType SupportedContentType => ContentType.XWwwFormUrlEncoded;
+
     /// <inheritdoc />
-    internal class XWwwFormUrlEncodedParser : IContentTypeParser
+    public HttpContent Parse(object body)
     {
-        public ContentType SupportedContentType => ContentType.XWwwFormUrlEncoded;
+        if (body is not IEnumerable<KeyValuePair<string, string>> list)
+            throw new Exception(
+                $"Body for content type {SupportedContentType} must be {typeof(IEnumerable<KeyValuePair<string, string>>).Name}");
 
-        /// <inheritdoc />
-        public HttpContent Parse(object body)
-        {
-            if (body is not IEnumerable<KeyValuePair<string, string>> list)
-            {
-                throw new Exception(
-                    $"Body for content type {SupportedContentType} must be {typeof(IEnumerable<KeyValuePair<string, string>>).Name}");
-            }
+        return new FormUrlEncodedContent(list);
+    }
 
-            return new FormUrlEncodedContent(list);
-        }
+    /// <inheritdoc />
+    public async Task<T> Parse<T>(HttpContent content)
+    {
+        var body = await content.ReadAsStringAsync();
 
-        /// <inheritdoc />
-        public async Task<T> Parse<T>(HttpContent content)
-        {
-            var body = await content.ReadAsStringAsync();
-
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(body);
-        }
+        return JsonConvert.DeserializeObject<T>(body);
     }
 }
