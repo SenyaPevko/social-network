@@ -1,11 +1,13 @@
 ﻿using IdentityConnectionLib.DtoModels.UserInfoLists;
 using Core.HttpLogic.HttpRequests.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Core.HttpLogic.HttpRequests.Models;
 using Core.HttpLogic.HttpRequests;
 using IdentityConnectionLib.DtoModels.ProfileInfo;
 using IdentityConnectionLib.ResponseHandlers;
+using IdentityConnectionLib.Config.Models;
+using IdentityConnectionLib.Config;
+using Core.HttpLogic.Base;
 
 namespace IdentityConnectionLib.Services
 {
@@ -14,15 +16,17 @@ namespace IdentityConnectionLib.Services
     {
         private readonly IHttpRequestService httpClientFactory;
         private readonly IResponseHandler responseHandler;
+        private readonly IIdentityApiConnectionConfig configuration;
 
         public IdentityConnectionService(
-            IConfiguration configuration,
+            IIdentityApiConnectionConfig configuration,
             IServiceProvider serviceProvider,
             IResponseHandler responseHandler)
         {
             this.responseHandler = responseHandler;
+            this.configuration = configuration;
 
-            if (configuration.GetSection("ServiceConnection").Value == "http")
+            if (configuration.ConnectionType == ConnectionType.Http)
             {
                 httpClientFactory = serviceProvider.GetRequiredService<IHttpRequestService>();
             }
@@ -39,7 +43,7 @@ namespace IdentityConnectionLib.Services
             var requestData = new HttpRequestData()
             {
                 Method = HttpMethod.Get,
-                Uri = new Uri("/api/users/profiles"),
+                Uri = new Uri(configuration.ProfilesInfoUri),
                 Body = request,
                 ContentType = ContentType.ApplicationJson,
                 ResponseAwaitTime = request.ResponseAwaitTime,
@@ -61,7 +65,7 @@ namespace IdentityConnectionLib.Services
             var requestData = new HttpRequestData()
             {
                 Method = HttpMethod.Get,
-                Uri = new Uri("/api/users/list"),
+                Uri = new Uri(configuration.UsersInfoUri),
                 Body = request,
                 ContentType = ContentType.ApplicationJson,
                 ResponseAwaitTime = request.ResponseAwaitTime,
