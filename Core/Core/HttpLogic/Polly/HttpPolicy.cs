@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Serilog;
 using Polly;
 
 namespace Core.HttpLogic.Polly
@@ -21,7 +21,7 @@ namespace Core.HttpLogic.Polly
                 .WaitAndRetryAsync(retryCount, retryAttempt => retryInterval,
                 (exception, timeSpan, retryCount, context) =>
                 {   
-                    logger.LogWarning($"Retry {retryCount} due to {exception}");
+                    logger.Warning($"Retry {retryCount} due to {exception}");
                 });
         }
 
