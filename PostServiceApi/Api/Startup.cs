@@ -20,9 +20,9 @@ using Domain.Tags;
 using IdentityConnectionLib;
 using Infrastructure;
 using Infrastructure.Comments;
-using Infrastructure.Connections;
 using Infrastructure.PostLikes;
 using Infrastructure.Posts;
+using Infrastructure.Posts.Connections;
 using Infrastructure.Tags;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
@@ -123,7 +123,6 @@ namespace Api
         private static void AddTracingServices(IServiceCollection services)
         {
             services.AddTraceId();
-            services.AddTransient<ITraceWriter>();
         }
 
         private static void AddLoggerServices(IServiceCollection services)
