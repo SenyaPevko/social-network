@@ -10,6 +10,9 @@
         /// Start listening to the selected queue and send responses
         /// </summary>
         /// <param name="handleRequest"></param>
-        void StartListeningForRequests(Func<string, string> handleRequest);
+        /// <param name="requestQueueName"></param>
+        /// <param name="responseQueueName"></param>
+        public void StartListeningForRequests(
+             Func<string, string> handleRequest, string requestQueueName, string responseQueueName);
     }
 }

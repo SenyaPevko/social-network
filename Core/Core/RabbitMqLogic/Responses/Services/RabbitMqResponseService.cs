@@ -9,33 +9,23 @@ namespace Core.RabbitMqLogic.Responses.Services
     public class RabbitMqResponseService : IRabbitMqResponseService
     {
         private readonly IModel channel;
-        private readonly string exchangeName;
-        private readonly string responseQueueName;
         private readonly IRabbitMqConnectionService connectionService;
 
-        public RabbitMqResponseService(
-            IRabbitMqConnectionService connectionService,
-            string exchangeName,
-            string responseQueueName)
+        public RabbitMqResponseService(IRabbitMqConnectionService connectionService)
         {
             this.connectionService = connectionService;
-            this.exchangeName = exchangeName;
-            this.responseQueueName = responseQueueName;
             channel = connectionService.CreateChannel();
         }
 
         /// <inheritdoc />
-        public void StartListeningForRequests(Func<string, string> handleRequest)
+        public void StartListeningForRequests(
+            Func<string, string> handleRequest,
+            string requestQueueName,
+            string responseQueueName)
         {
-            channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Direct);
-            var queueName = channel.QueueDeclare().QueueName;
-            channel.QueueBind(queue: queueName,
-                               exchange: exchangeName,
-                               routingKey: queueName);
-
             var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (model, ea) => HandleRequestReceived(model, ea, handleRequest);
-            channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+            consumer.Received += (model, ea) => HandleRequestReceived(model, ea, handleRequest, responseQueueName);
+            channel.BasicConsume(queue: requestQueueName, autoAck: true, consumer: consumer);
         }
 
         /// <summary>
@@ -44,12 +34,17 @@ namespace Core.RabbitMqLogic.Responses.Services
         /// <param name="model"></param>
         /// <param name="ea"></param>
         /// <param name="handleRequest"></param>
-        private void HandleRequestReceived(object model, BasicDeliverEventArgs ea, Func<string, string> handleRequest)
+        /// <param name="responseQueueName"></param>
+        private void HandleRequestReceived(
+            object model,
+            BasicDeliverEventArgs ea,
+            Func<string, string> handleRequest,
+            string responseQueueName)
         {
             var body = ea.Body.ToArray();
             var request = Encoding.UTF8.GetString(body);
             var response = handleRequest.Invoke(request);
-            SendResponse(ea.BasicProperties.CorrelationId, response);
+            SendResponse(ea.BasicProperties.CorrelationId, response, responseQueueName);
         }
 
         /// <summary>
@@ -57,10 +52,11 @@ namespace Core.RabbitMqLogic.Responses.Services
         /// </summary>
         /// <param name="correlationId"></param>
         /// <param name="response"></param>
-        private void SendResponse(string correlationId, string response)
+        /// <param name="responseQueueName"></param>
+        private void SendResponse(string correlationId, string response, string responseQueueName)
         {
             var props = CreateBasicProperties(correlationId);
-            connectionService.PublishMessage(response, props, exchangeName, responseQueueName, channel);
+            connectionService.PublishMessage(response, props, responseQueueName, responseQueueName, channel);
         }
 
         /// <summary>

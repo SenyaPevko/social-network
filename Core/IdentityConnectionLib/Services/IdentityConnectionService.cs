@@ -25,11 +25,14 @@ public class IdentityConnectionService : IIdentityConnectionService
         this.responseHandler = responseHandler;
         this.configuration = configuration;
 
-        if (configuration.ConnectionType == ConnectionType.Http)
+        switch (configuration.ConnectionType)
         {
-            httpClientFactory = serviceProvider.GetRequiredService<IHttpRequestService>();
+            case ConnectionType.Http:
+                httpClientFactory = serviceProvider.GetRequiredService<IHttpRequestService>();
+                break;
+            default:
+                break;
         }
-        // RPC по rabbit
     }
 
     /// <inheritdoc />
