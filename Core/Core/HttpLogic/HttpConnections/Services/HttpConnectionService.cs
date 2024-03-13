@@ -35,11 +35,8 @@ internal class HttpConnectionService : IHttpConnectionService
         CancellationToken cancellationToken,
         HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead)
     {
-        var retryPolicy = httpPolicy.GetRetryPolicy(TimeSpan.FromSeconds(3));
-        var timeoutPolicy = httpPolicy.GetTimeoutPolicy(TimeSpan.FromSeconds(10));
-        var policyWrap = Policy.WrapAsync(retryPolicy, timeoutPolicy);
-        var response = await policyWrap.ExecuteAsync(() => httpClient
-            .SendAsync(httpRequestMessage, httpCompletionOption, cancellationToken));
+        var response = await httpClient
+            .SendAsync(httpRequestMessage, httpCompletionOption, cancellationToken);
 
         return response;
     }
