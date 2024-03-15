@@ -6,6 +6,7 @@ using Core.HttpLogic.HttpResponses.Models;
 using Core.HttpLogic.Polly;
 using Core.Logic.Tracing.TraceLogic.TraceWriters;
 using Polly;
+using System.Net.Http;
 
 namespace Core.HttpLogic.HttpRequests.Services;
 
@@ -45,8 +46,7 @@ internal class HttpRequestService : IHttpRequestService
             RequestUri = requestData.Uri,
             Content = content
         };
-        foreach (var traceReader in traceReadersList)
-            httpRequestMessage.Headers.Add(traceReader.Name, traceReader.GetValue());
+        EnrichTheMessageWithTraceId(httpRequestMessage);
         var retryPolicy = httpPolicy.GetRetryPolicy(requestData.RetryInterval, requestData.RetryCount);
         var timeoutPolicy = httpPolicy.GetTimeoutPolicy(requestData.ResponseAwaitTime);
         var policyWrap = Policy.WrapAsync(retryPolicy, timeoutPolicy);
@@ -62,5 +62,11 @@ internal class HttpRequestService : IHttpRequestService
             Headers = response.Headers,
             ContentHeaders = response.Content.Headers
         };
+    }
+
+    private void EnrichTheMessageWithTraceId(HttpRequestMessage message)
+    {
+        foreach (var traceReader in traceReadersList)
+            message.Headers.Add(traceReader.Name, traceReader.GetValue());
     }
 }
