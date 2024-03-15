@@ -1,4 +1,4 @@
-﻿namespace Core.TraceLogic.TraceReaders;
+﻿namespace Core.Logic.Tracing.TraceLogic.TraceReaders;
 
 /// <summary>
 ///     Reading trace values when a new scoped is created

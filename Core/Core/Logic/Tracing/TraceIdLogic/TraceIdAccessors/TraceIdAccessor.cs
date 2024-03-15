@@ -1,8 +1,8 @@
-﻿using Core.TraceLogic.TraceReaders;
-using Core.TraceLogic.TraceWriters;
+﻿using Core.Logic.Tracing.TraceLogic.TraceReaders;
+using Core.Logic.Tracing.TraceLogic.TraceWriters;
 using Serilog.Context;
 
-namespace Core.TraceIdLogic.TraceIdAccessors;
+namespace Core.Logic.Tracing.TraceIdLogic.TraceIdAccessors;
 
 internal class TraceIdAccessor : ITraceWriter, ITraceReader, ITraceIdAccessor
 {

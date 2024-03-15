@@ -1,4 +1,4 @@
-﻿namespace Core.TraceLogic.TraceWriters;
+﻿namespace Core.Logic.Tracing.TraceLogic.TraceWriters;
 
 /// <summary>
 ///     Recording trace values when sending a request

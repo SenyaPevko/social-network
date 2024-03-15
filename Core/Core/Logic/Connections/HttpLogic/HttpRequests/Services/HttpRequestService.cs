@@ -5,7 +5,7 @@ using Core.Logic.Connections.HttpLogic.HttpRequests.Models;
 using Core.Logic.Connections.HttpLogic.HttpRequests.Parsers;
 using Core.Logic.Connections.HttpLogic.HttpResponses.Models;
 using Core.Logic.Connections.HttpLogic.Polly;
-using Core.TraceLogic.TraceWriters;
+using Core.Logic.Tracing.TraceLogic.TraceWriters;
 using Polly;
 
 namespace Core.Logic.Connections.HttpLogic.HttpRequests.Services;
