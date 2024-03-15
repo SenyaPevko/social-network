@@ -9,9 +9,8 @@ using Application.Posts.Services;
 using Application.Tags.Mappers;
 using Application.Tags.Services;
 using Core.HttpLogic;
-using Core.Logs;
-using Core.TraceIdLogic.TraceIdAccessors;
-using Core.TraceLogic.TraceReaders;
+using Core.Logic.Logs;
+using Core.Logic.Tracing.TraceIdLogic.TraceIdAccessors;
 using Domain.Clients.PostUsersInfo;
 using Domain.Comments;
 using Domain.PostLikes;
@@ -26,6 +25,7 @@ using Infrastructure.Posts.Connections;
 using Infrastructure.Tags;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Api
 {
@@ -45,11 +45,11 @@ namespace Api
             ConfigureSwagger(services);
             AddMappers(services);
             AddHttpRequestServices(services);
-            AddLoggerServices(services);
             AddTracingServices(services);
             AddRepositories(services);
             AddConnections(services);
             AddServices(services);
+            AddLogging(services);
             AddMiddleWares(services);
         }
 
@@ -65,6 +65,7 @@ namespace Api
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseSerilogRequestLogging();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -125,9 +126,12 @@ namespace Api
             services.AddTraceId();
         }
 
-        private static void AddLoggerServices(IServiceCollection services)
+        private static void AddLogging(IServiceCollection services)
         {
             services.AddLoggerServices();
+            Log.Logger = new LoggerConfiguration().GetConfiguration().CreateLogger();
+            services.AddLogging(loggingBuilder =>
+                        loggingBuilder.AddSerilog(dispose: true));
         }
 
         private static void AddMappers(IServiceCollection services)
