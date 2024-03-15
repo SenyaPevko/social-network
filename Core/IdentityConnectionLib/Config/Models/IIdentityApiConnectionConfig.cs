@@ -1,10 +1,10 @@
-﻿using Core.HttpLogic.Base;
+﻿using Core.Logic.Connections.Base;
 
-namespace IdentityConnectionLib.Config.Models;
-
-public interface IIdentityApiConnectionConfig
+namespace IdentityConnectionLib.Config.Models
 {
-    ConnectionType ConnectionType { get; }
-    string ProfilesInfoUri { get; }
-    string UsersInfoUri { get; }
+    public interface IIdentityApiConnectionConfig : IConnectionConfiguration
+    {
+        string ProfilesInfoUri { get; }
+        string UsersInfoUri { get; }
+    }
 }
