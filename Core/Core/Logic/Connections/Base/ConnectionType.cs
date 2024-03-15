@@ -1,4 +1,4 @@
-﻿namespace Core.HttpLogic.Base;
+﻿namespace Core.Logic.Connections.Base;
 
 public enum ConnectionType
 {
