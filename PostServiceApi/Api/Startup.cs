@@ -8,10 +8,10 @@ using Application.Posts.Mappers.ViewModelMapper;
 using Application.Posts.Services;
 using Application.Tags.Mappers;
 using Application.Tags.Services;
-using Core.HttpLogic;
+using Core.Logic.Connections.HttpLogic;
+using Core.Logic.Connections.RabbitMqLogic;
 using Core.Logs;
 using Core.TraceIdLogic.TraceIdAccessors;
-using Core.TraceLogic.TraceReaders;
 using Domain.Clients.PostUsersInfo;
 using Domain.Comments;
 using Domain.PostLikes;
@@ -44,6 +44,8 @@ namespace Api
             ConfigureControllers(services);
             ConfigureSwagger(services);
             AddMappers(services);
+            AddLibsServices(services);
+            AddRabbitMqRequestServices(services);
             AddHttpRequestServices(services);
             AddLoggerServices(services);
             AddTracingServices(services);
@@ -114,10 +116,19 @@ namespace Api
             services.AddScoped<IPostUserInfoServiceClient, PostUserInfoServiceClient>();
         }
 
+        private static void AddLibsServices(IServiceCollection services)
+        {
+            services.AddIdentityConnectionLibServices();
+        }
+
         private static void AddHttpRequestServices(IServiceCollection services)
         {
             services.AddHttpServices();
-            services.AddIdentityConnectionLibServices();
+        }
+
+        private static void AddRabbitMqRequestServices(IServiceCollection services)
+        {
+            services.AddRabbitMqServices();
         }
 
         private static void AddTracingServices(IServiceCollection services)
