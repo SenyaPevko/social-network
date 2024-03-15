@@ -2,7 +2,7 @@
 using Serilog;
 using Serilog.Events;
 
-namespace Core.Logs;
+namespace Core.Logic.Logs;
 
 /// <summary>
 ///     Serilogger configuration

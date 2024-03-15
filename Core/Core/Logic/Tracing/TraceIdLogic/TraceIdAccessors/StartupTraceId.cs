@@ -1,9 +1,9 @@
-﻿using Core.TraceLogic.TraceReaders;
-using Core.TraceLogic.TraceWriters;
+﻿using Core.Logic.Tracing.TraceLogic.TraceReaders;
+using Core.Logic.Tracing.TraceLogic.TraceWriters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Core.TraceIdLogic.TraceIdAccessors;
+namespace Core.Logic.Tracing.TraceIdLogic.TraceIdAccessors;
 
 /// <summary>
 ///     Registrating tracing services into di container
