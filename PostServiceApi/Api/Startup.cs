@@ -48,7 +48,6 @@ namespace Api
             AddLibsServices(services);
             AddRabbitMqRequestServices(services);
             AddHttpRequestServices(services);
-            AddLogging(services);
             AddTracingServices(services);
             AddRepositories(services);
             AddConnections(services);
