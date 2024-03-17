@@ -2,6 +2,8 @@ using Api.Controllers.UserProfiles.Requests;
 using Api.Controllers.UserProfiles.Responses;
 using Api.Controllers.Users.Requests;
 using Api.Controllers.Users.Responses;
+using Api.Listeners.RabbitMq;
+using Core.Logic.Connections.RabbitMqLogic;
 using Core.Logic.Logs;
 using Core.Logic.Tracing.TraceIdLogic.TraceIdAccessors;
 using Dal;
@@ -13,13 +15,13 @@ using Dal.Roles;
 using Dal.Sessions;
 using Dal.UserProfiles;
 using Dal.Users;
+using IdentityConnectionLib;
 using Logic.UserProfiles.Managers;
 using Logic.UserProfiles.Models;
 using Logic.Users.Managers;
 using Logic.Users.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +52,12 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ISessionRepository, SessionRepository>();
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// adding RabbitMq services
+builder.Services.ConfigureConnections();
+builder.Services.AddRabbitMqServices();
+builder.Services.AddHostedService<UserProfileRabittMqListener>();
+builder.Services.AddHostedService<UserRabbitMqListener>();
 
 // adding logic refs
 builder.Services.AddScoped<IUserProfileLogicManager, UserProfileLogicManager>();
