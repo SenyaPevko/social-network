@@ -1,3 +1,5 @@
+using Serilog;
+
 namespace Api
 {
     internal static class Program
@@ -12,6 +14,6 @@ namespace Api
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
                         webBuilder.UseStartup<Startup>();
-                    });
+                    }).UseSerilog();
     }
 }

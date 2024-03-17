@@ -1,12 +1,13 @@
-﻿namespace Core.Logic.Tracing.TraceLogic.TraceReaders;
-
-/// <summary>
-///     Reading trace values when a new scoped is created
-///     // для HTTP мы создаем middleware и  в нем это делаем
-/// </summary>
-public interface ITraceWriter
+﻿namespace Core.Logic.Tracing.TraceLogic.TraceReaders
 {
-    string Name { get; }
+    /// <summary>
+    ///     Reading trace values when a new scoped is created
+    ///     // для HTTP мы создаем middleware и  в нем это делаем
+    /// </summary>
+    public interface ITraceWriter
+    {
+        string Name { get; }
 
-    void WriteValue(string value);
+        void WriteValue(string value);
+    }
 }

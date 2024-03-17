@@ -1,43 +1,43 @@
 ﻿using Core.Logic.Connections.HttpLogic.HttpConnections.Models;
 using Core.Logic.Connections.HttpLogic.Polly;
-using Polly;
 
-namespace Core.Logic.Connections.HttpLogic.HttpConnections.Services;
-
-/// <inheritdoc />
-internal class HttpConnectionService : IHttpConnectionService
+namespace Core.Logic.Connections.HttpLogic.HttpConnections.Services
 {
-    private readonly IHttpClientFactory httpClientFactory;
-    private readonly IHttpPolicy httpPolicy;
-
-    public HttpConnectionService(IHttpClientFactory httpClientFactory, IHttpPolicy httpPolicy)
-    {
-        this.httpClientFactory = httpClientFactory;
-        this.httpPolicy = httpPolicy;
-    }
-
     /// <inheritdoc />
-    public HttpClient CreateHttpClient(HttpConnectionData httpConnectionData)
+    internal class HttpConnectionService : IHttpConnectionService
     {
-        var httpClient = string.IsNullOrWhiteSpace(httpConnectionData.ClientName)
-            ? httpClientFactory.CreateClient()
-            : httpClientFactory.CreateClient(httpConnectionData.ClientName);
+        private readonly IHttpClientFactory httpClientFactory;
+        private readonly IHttpPolicy httpPolicy;
 
-        if (httpConnectionData.Timeout != null) httpClient.Timeout = httpConnectionData.Timeout.Value;
+        public HttpConnectionService(IHttpClientFactory httpClientFactory, IHttpPolicy httpPolicy)
+        {
+            this.httpClientFactory = httpClientFactory;
+            this.httpPolicy = httpPolicy;
+        }
 
-        return httpClient;
-    }
+        /// <inheritdoc />
+        public HttpClient CreateHttpClient(HttpConnectionData httpConnectionData)
+        {
+            var httpClient = string.IsNullOrWhiteSpace(httpConnectionData.ClientName)
+                ? httpClientFactory.CreateClient()
+                : httpClientFactory.CreateClient(httpConnectionData.ClientName);
 
-    /// <inheritdoc />
-    public async Task<HttpResponseMessage> SendRequestAsync(
-        HttpRequestMessage httpRequestMessage,
-        HttpClient httpClient,
-        CancellationToken cancellationToken,
-        HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead)
-    {
-        var response = await httpClient
-            .SendAsync(httpRequestMessage, httpCompletionOption, cancellationToken);
+            if (httpConnectionData.Timeout != null) httpClient.Timeout = httpConnectionData.Timeout.Value;
 
-        return response;
+            return httpClient;
+        }
+
+        /// <inheritdoc />
+        public async Task<HttpResponseMessage> SendRequestAsync(
+            HttpRequestMessage httpRequestMessage,
+            HttpClient httpClient,
+            CancellationToken cancellationToken,
+            HttpCompletionOption httpCompletionOption = HttpCompletionOption.ResponseContentRead)
+        {
+            var response = await httpClient
+                .SendAsync(httpRequestMessage, httpCompletionOption, cancellationToken);
+
+            return response;
+        }
     }
 }

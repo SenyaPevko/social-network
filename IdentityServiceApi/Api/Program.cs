@@ -4,6 +4,8 @@ using Api.Controllers.Users.Requests;
 using Api.Controllers.Users.Responses;
 using Api.Listeners.RabbitMq;
 using Core.Logic.Connections.RabbitMqLogic;
+using Core.Logic.Logs;
+using Core.Logic.Tracing.TraceIdLogic.TraceIdAccessors;
 using Dal;
 using Dal.FriendRequests;
 using Dal.Friendships;
@@ -20,6 +22,7 @@ using Logic.Users.Managers;
 using Logic.Users.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +62,15 @@ builder.Services.AddHostedService<UserRabbitMqListener>();
 // adding logic refs
 builder.Services.AddScoped<IUserProfileLogicManager, UserProfileLogicManager>();
 builder.Services.AddScoped<IUserLogicManager, UserLogicManager>();
+
+// adding logger
+builder.Services.AddLoggerServices();
+builder.Services.AddTraceId();
+Log.Logger = new LoggerConfiguration().GetConfiguration().CreateLogger();
+builder.Host.UseSerilog();
+builder.Services.AddLogging(loggingBuilder =>
+            loggingBuilder.AddSerilog(dispose: true));
+
 
 // adding mappers
 builder.Services.AddAutoMapper(cfg =>
@@ -116,6 +128,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseSerilogRequestLogging();
 
 app.MapControllers();
 

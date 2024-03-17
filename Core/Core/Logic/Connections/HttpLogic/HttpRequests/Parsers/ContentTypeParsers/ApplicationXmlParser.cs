@@ -1,30 +1,30 @@
 ﻿using System.Net.Mime;
 using System.Text;
 using System.Xml.Serialization;
-using Core.Logic.Connections.HttpLogic.HttpRequests;
 
-namespace Core.Logic.Connections.HttpLogic.HttpRequests.Parsers.ContentTypeParsers;
-
-/// <inheritdoc />
-internal class ApplicationXmlParser : IContentTypeParser
+namespace Core.Logic.Connections.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
 {
-    public ContentType SupportedContentType => ContentType.ApplicationXml;
-
     /// <inheritdoc />
-    public HttpContent Parse(object body)
+    internal class ApplicationXmlParser : IContentTypeParser
     {
-        if (body is not string s)
-            throw new Exception($"Body for content type {SupportedContentType} must be XML string");
+        public ContentType SupportedContentType => ContentType.ApplicationXml;
 
-        return new StringContent(s, Encoding.UTF8, MediaTypeNames.Application.Xml);
-    }
+        /// <inheritdoc />
+        public HttpContent Parse(object body)
+        {
+            if (body is not string s)
+                throw new Exception($"Body for content type {SupportedContentType} must be XML string");
 
-    /// <inheritdoc />
-    public async Task<T> Parse<T>(HttpContent content)
-    {
-        var serializer = new XmlSerializer(typeof(T));
-        var desirializedBody = (T)serializer.Deserialize(await content.ReadAsStreamAsync());
+            return new StringContent(s, Encoding.UTF8, MediaTypeNames.Application.Xml);
+        }
 
-        return desirializedBody;
+        /// <inheritdoc />
+        public async Task<T> Parse<T>(HttpContent content)
+        {
+            var serializer = new XmlSerializer(typeof(T));
+            var desirializedBody = (T)serializer.Deserialize(await content.ReadAsStreamAsync());
+
+            return desirializedBody;
+        }
     }
 }

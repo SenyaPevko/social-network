@@ -7,40 +7,41 @@ using Core.Logic.Connections.HttpLogic.Polly;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Core.Logic.Connections.HttpLogic;
-
-/// <summary>
-///     Registrating http services into di container
-/// </summary>
-public static class HttpServiceStartup
+namespace Core.Logic.Connections.HttpLogic
 {
     /// <summary>
-    ///     Adding services to send requests by http protocol
+    ///     Registrating http services into di container
     /// </summary>
-    public static IServiceCollection AddHttpServices(this IServiceCollection services)
+    public static class HttpServiceStartup
     {
-        services
-            .AddHttpContextAccessor()
-            .AddHttpClient()
-            .AddTransient<IHttpConnectionService, HttpConnectionService>();
+        /// <summary>
+        ///     Adding services to send requests by http protocol
+        /// </summary>
+        public static IServiceCollection AddHttpServices(this IServiceCollection services)
+        {
+            services
+                .AddHttpContextAccessor()
+                .AddHttpClient()
+                .AddTransient<IHttpConnectionService, HttpConnectionService>();
 
-        services.TryAddTransient<IHttpPolicy, HttpPolicy>();
-        services.TryAddTransient<IHttpRequestService, HttpRequestService>();
-        services.AddHttpContentParsers();
+            services.TryAddTransient<IHttpPolicy, HttpPolicy>();
+            services.TryAddTransient<IHttpRequestService, HttpRequestService>();
+            services.AddHttpContentParsers();
 
-        return services;
-    }
+            return services;
+        }
 
-    private static IServiceCollection AddHttpContentParsers(this IServiceCollection services)
-    {
-        services.AddScoped<IHttpContentParser<ContentType>, ContentTypeParser>();
+        private static IServiceCollection AddHttpContentParsers(this IServiceCollection services)
+        {
+            services.AddScoped<IHttpContentParser<ContentType>, ContentTypeParser>();
 
-        services.AddScoped<IContentTypeParser, ApplicationJsonParser>();
-        services.AddScoped<IContentTypeParser, ApplicationXmlParser>();
-        services.AddScoped<IContentTypeParser, BinaryParser>();
-        services.AddScoped<IContentTypeParser, TextXmlParser>();
-        services.AddScoped<IContentTypeParser, XWwwFormUrlEncodedParser>();
+            services.AddScoped<IContentTypeParser, ApplicationJsonParser>();
+            services.AddScoped<IContentTypeParser, ApplicationXmlParser>();
+            services.AddScoped<IContentTypeParser, BinaryParser>();
+            services.AddScoped<IContentTypeParser, TextXmlParser>();
+            services.AddScoped<IContentTypeParser, XWwwFormUrlEncodedParser>();
 
-        return services;
+            return services;
+        }
     }
 }

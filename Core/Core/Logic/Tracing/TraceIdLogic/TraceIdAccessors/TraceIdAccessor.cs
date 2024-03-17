@@ -2,22 +2,23 @@
 using Core.Logic.Tracing.TraceLogic.TraceWriters;
 using Serilog.Context;
 
-namespace Core.Logic.Tracing.TraceIdLogic.TraceIdAccessors;
-
-internal class TraceIdAccessor : ITraceWriter, ITraceReader, ITraceIdAccessor
+namespace Core.Logic.Tracing.TraceIdLogic.TraceIdAccessors
 {
-    private string value;
-
-    public string GetValue()
+    internal class TraceIdAccessor : ITraceWriter, ITraceReader, ITraceIdAccessor
     {
-        return value;
-    }
+        private string value;
 
-    public string Name => "TraceId";
+        public string GetValue()
+        {
+            return value;
+        }
 
-    public void WriteValue(string value)
-    {
-        this.value = string.IsNullOrWhiteSpace(value) ? value = Guid.NewGuid().ToString() : value;
-        LogContext.PushProperty(Name, value);
+        public string Name => "TraceId";
+
+        public void WriteValue(string value)
+        {
+            this.value = string.IsNullOrWhiteSpace(value) ? value = Guid.NewGuid().ToString() : value;
+            LogContext.PushProperty(Name, value);
+        }
     }
 }

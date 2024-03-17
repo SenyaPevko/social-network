@@ -1,7 +1,7 @@
 ﻿using Domain.Clients.PostUsersInfo;
 using IdentityConnectionLib.DtoModels.ProfileInfo;
 using IdentityConnectionLib.DtoModels.UserInfoLists;
-using IdentityConnectionLib.Services;
+using IdentityConnectionLib.Services.Identity;
 
 namespace Infrastructure.Posts.Connections
 {

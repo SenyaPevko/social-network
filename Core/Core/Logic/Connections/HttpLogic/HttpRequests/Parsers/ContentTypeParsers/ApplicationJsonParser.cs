@@ -1,37 +1,37 @@
 ﻿using System.Net.Mime;
 using System.Text;
-using Core.Logic.Connections.HttpLogic.HttpRequests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Core.Logic.Connections.HttpLogic.HttpRequests.Parsers.ContentTypeParsers;
-
-/// <inheritdoc />
-internal class ApplicationJsonParser : IContentTypeParser
+namespace Core.Logic.Connections.HttpLogic.HttpRequests.Parsers.ContentTypeParsers
 {
-    public ContentType SupportedContentType => ContentType.ApplicationJson;
-
     /// <inheritdoc />
-    public HttpContent Parse(object body)
+    internal class ApplicationJsonParser : IContentTypeParser
     {
-        if (body is string stringBody) body = JToken.Parse(stringBody);
+        public ContentType SupportedContentType => ContentType.ApplicationJson;
 
-        var serializeSettings = new JsonSerializerSettings
+        /// <inheritdoc />
+        public HttpContent Parse(object body)
         {
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            NullValueHandling = NullValueHandling.Ignore
-        };
-        var serializedBody = JsonConvert.SerializeObject(body, serializeSettings);
-        var content = new StringContent(serializedBody, Encoding.UTF8, MediaTypeNames.Application.Json);
-        return content;
-    }
+            if (body is string stringBody) body = JToken.Parse(stringBody);
 
-    /// <inheritdoc />
-    public async Task<T> Parse<T>(HttpContent content)
-    {
-        var body = await content.ReadAsStringAsync();
-        var desirializedBody = JsonConvert.DeserializeObject<T>(body);
+            var serializeSettings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            var serializedBody = JsonConvert.SerializeObject(body, serializeSettings);
+            var content = new StringContent(serializedBody, Encoding.UTF8, MediaTypeNames.Application.Json);
+            return content;
+        }
 
-        return desirializedBody;
+        /// <inheritdoc />
+        public async Task<T> Parse<T>(HttpContent content)
+        {
+            var body = await content.ReadAsStringAsync();
+            var desirializedBody = JsonConvert.DeserializeObject<T>(body);
+
+            return desirializedBody;
+        }
     }
 }
