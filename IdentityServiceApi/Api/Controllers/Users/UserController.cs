@@ -1,6 +1,7 @@
 ﻿using Api.Controllers.Users.Requests;
 using Api.Controllers.Users.Responses;
 using AutoMapper;
+using IdentityConnectionLib.DtoModels.UserInfoLists;
 using Logic.Users.Managers;
 using Logic.Users.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +52,26 @@ namespace Api.Controllers.Users
             var user = await userLogicManager.GetUserAsync(id);
 
             var response = mapper.Map<GetUserInfoResponse>(user);
+
+            return Ok(response);
+        }
+
+        [HttpGet("list")]
+        [Produces("application/json", "application/xml")]
+        [ProducesResponseType(typeof(UserInfoListIdentityServiceApiResponse), 200)]
+        public async Task<IActionResult> GetUsersInfoAsync([FromBody] UserInfoListIdentityServiceApiRequest request)
+        {
+            var userList = new List<UserInfo>();
+            foreach (var id in request.UsersId)
+            {
+                var user = await userLogicManager.GetUserAsync(id);
+                userList.Add(new UserInfo()
+                {
+                    FirstName = user.FirstName,
+                    SecondName = user.SecondName
+                });
+            }
+            var response = new UserInfoListIdentityServiceApiResponse() { UsersInfo = userList.ToArray() };
 
             return Ok(response);
         }

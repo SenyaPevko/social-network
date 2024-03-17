@@ -1,4 +1,4 @@
-﻿using Application.Posts;
+﻿using Application.Posts.Models;
 using Application.Posts.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +28,7 @@ namespace Presentation.Controllers
         [HttpPost]
         [Produces("application/json", "application/xml")]
         [ProducesResponseType(typeof(Guid), 201)]
-        public async Task<IActionResult> CreatePostAsync([FromBody] PostViewModel postViewModel)
+        public async Task<IActionResult> CreatePostAsync([FromBody] PostInputModel postViewModel)
         {
             var id = await postService.CreateAsync(postViewModel);
 
@@ -37,7 +37,7 @@ namespace Presentation.Controllers
 
         [HttpPut]
         [ProducesResponseType(204)]
-        public async Task<IActionResult> UpdatePostAsync([FromBody] PostViewModel postViewModel)
+        public async Task<IActionResult> UpdatePostAsync([FromBody] PostInputModel postViewModel)
         {
             await postService.UpdateAsync(postViewModel);
 

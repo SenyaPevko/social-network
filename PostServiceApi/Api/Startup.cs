@@ -3,21 +3,29 @@ using Application.Comments.Mappers;
 using Application.Comments.Services;
 using Application.PostLikes.Mappers;
 using Application.PostLikes.Services;
-using Application.Posts.Mappers;
+using Application.Posts.Mappers.InputModelMapper;
+using Application.Posts.Mappers.ViewModelMapper;
 using Application.Posts.Services;
 using Application.Tags.Mappers;
 using Application.Tags.Services;
+using Core.HttpLogic;
+using Core.Logic.Logs;
+using Core.Logic.Tracing.TraceIdLogic.TraceIdAccessors;
+using Domain.Clients.PostUsersInfo;
 using Domain.Comments;
 using Domain.PostLikes;
 using Domain.Posts;
 using Domain.Tags;
+using IdentityConnectionLib;
 using Infrastructure;
 using Infrastructure.Comments;
 using Infrastructure.PostLikes;
 using Infrastructure.Posts;
+using Infrastructure.Posts.Connections;
 using Infrastructure.Tags;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Api
 {
@@ -36,8 +44,12 @@ namespace Api
             ConfigureControllers(services);
             ConfigureSwagger(services);
             AddMappers(services);
+            AddHttpRequestServices(services);
+            AddTracingServices(services);
             AddRepositories(services);
+            AddConnections(services);
             AddServices(services);
+            AddLogging(services);
             AddMiddleWares(services);
         }
 
@@ -53,6 +65,7 @@ namespace Api
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseSerilogRequestLogging();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -97,11 +110,36 @@ namespace Api
             services.AddScoped<ITagService, TagService>();
         }
 
+        private static void AddConnections(IServiceCollection services)
+        {
+            services.AddScoped<IPostUserInfoServiceClient, PostUserInfoServiceClient>();
+        }
+
+        private static void AddHttpRequestServices(IServiceCollection services)
+        {
+            services.AddHttpServices();
+            services.AddIdentityConnectionLibServices();
+        }
+
+        private static void AddTracingServices(IServiceCollection services)
+        {
+            services.AddTraceId();
+        }
+
+        private static void AddLogging(IServiceCollection services)
+        {
+            services.AddLoggerServices();
+            Log.Logger = new LoggerConfiguration().GetConfiguration().CreateLogger();
+            services.AddLogging(loggingBuilder =>
+                        loggingBuilder.AddSerilog(dispose: true));
+        }
+
         private static void AddMappers(IServiceCollection services)
         {
             services.AddScoped<ICommentViewModelMapper, CommentViewModelMapper>();
             services.AddScoped<IPostLikeViewModelMapper, PostLikeViewModelMapper>();
             services.AddScoped<ITagViewModelMapper, TagViewModelMapper>();
+            services.AddScoped<IPostInputModelMapper, PostInputModelMapper>();
             services.AddScoped<IPostViewModelMapper, PostViewModelMapper>();
         }
 
