@@ -13,5 +13,5 @@ public class IdentityApiConnectionConfig : IIdentityApiConnectionConfig
 
     public RabbitMqConnectionType RabbitMqConnectionType => RabbitMqConnectionType.Uri;
 
-    public string RabbitMqHostName => "hostname";
+    public string RabbitMqHostName => "localhost";
 }

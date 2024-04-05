@@ -40,7 +40,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // adding dbcontext
-string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+string connection = builder.Configuration.GetConnectionString("PostgressConnectionString");
 builder.Services.AddDbContext<IdentityServiceContext>(options => options.UseNpgsql(connection));
 
 // adding dal refs
