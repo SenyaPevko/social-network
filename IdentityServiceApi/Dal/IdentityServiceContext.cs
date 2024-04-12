@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dal
 {
-    public class IdentityServiceContext: DbContext
+    public sealed class IdentityServiceContext: DbContext
     {
         public DbSet<UserDal> Users { get; set; } = null!;
         public DbSet<UserProfileDal> UserProfiles { get; set; } = null!;
@@ -23,7 +23,7 @@ namespace Dal
         public IdentityServiceContext(DbContextOptions<IdentityServiceContext> options)
             : base(options)
         {
-            Database.EnsureCreated();   
+            Database.EnsureCreated();
         }
     }
 }

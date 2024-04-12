@@ -1,5 +1,4 @@
-﻿
-using Core.Logic.Base.Exceptions;
+﻿using Core.Logic.Base.Exceptions;
 using System.Text.Json;
 
 namespace Api.MiddleWare
