@@ -1,3 +1,4 @@
+using Api.Consumers;
 using Api.Controllers.UserProfiles.Requests;
 using Api.Controllers.UserProfiles.Responses;
 using Api.Controllers.Users.Requests;
@@ -20,6 +21,7 @@ using Logic.UserProfiles.Managers;
 using Logic.UserProfiles.Models;
 using Logic.Users.Managers;
 using Logic.Users.Models;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -40,7 +42,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // adding dbcontext
-string connection = builder.Configuration.GetConnectionString("PostgressConnectionString");
+string connection = builder.Configuration.GetConnectionString("PostgresConnectionString");
 builder.Services.AddDbContext<IdentityServiceContext>(options => options.UseNpgsql(connection));
 
 // adding dal refs
@@ -54,10 +56,10 @@ builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // adding RabbitMq services
-builder.Services.ConfigureConnections();
+/*builder.Services.ConfigureConnections();
 builder.Services.AddRabbitMqServices();
 builder.Services.AddHostedService<UserProfileRabittMqListener>();
-builder.Services.AddHostedService<UserRabbitMqListener>();
+builder.Services.AddHostedService<UserRabbitMqListener>();*/
 
 // adding logic refs
 builder.Services.AddScoped<IUserProfileLogicManager, UserProfileLogicManager>();
@@ -69,7 +71,35 @@ builder.Services.AddTraceId();
 Log.Logger = new LoggerConfiguration().GetConfiguration().CreateLogger();
 builder.Host.UseSerilog();
 builder.Services.AddLogging(loggingBuilder =>
-            loggingBuilder.AddSerilog(dispose: true));
+    loggingBuilder.AddSerilog(dispose: true));
+
+// adding masstransit
+var hostName = builder.Configuration["RabbitMqConnection:HostName"];
+var port = builder.Configuration.GetValue<ushort>("RabbitMqConnection:Port");
+var userName = builder.Configuration["RabbitMqConnection:UserName"];
+var password = builder.Configuration["RabbitMqConnection:Password"];
+var virtualHost = builder.Configuration["RabbitMqConnection:VirtualHost"];
+
+builder.Services.AddMassTransit(cfg =>
+{
+    cfg.SetKebabCaseEndpointNameFormatter();
+    cfg.AddDelayedMessageScheduler();
+    cfg.AddConsumer<UserInfoListConsumer>();
+    cfg.AddConsumer<UserProfileListConsumer>();
+    cfg.UsingRabbitMq((brc, rbfc) =>
+    {
+        rbfc.UseInMemoryOutbox();
+        rbfc.UseMessageRetry(r => { r.Incremental(3, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1)); });
+
+        rbfc.UseDelayedMessageScheduler();
+        rbfc.Host(hostName, port, virtualHost, h =>
+        {
+            h.Username(userName);
+            h.Password(password);
+        });
+        rbfc.ConfigureEndpoints(brc);
+    });
+});
 
 // adding mappers
 builder.Services.AddAutoMapper(cfg =>
@@ -113,7 +143,6 @@ builder.Services.AddAutoMapper(cfg =>
 
     cfg.CreateMap<UserProfileLogic, GetUserProfileInfoResponse>();
 }, Array.Empty<System.Reflection.Assembly>());
-
 
 var app = builder.Build();
 

@@ -11,6 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.2.1-develop.1735" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.1-develop.1735" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
@@ -36,6 +38,9 @@
     </Reference>
     <Reference Include="IdentityConnectionLib">
       <HintPath>..\..\Core\IdentityConnectionLib\bin\Debug\net8.0\IdentityConnectionLib.dll</HintPath>
+    </Reference>
+    <Reference Include="PostConnectionLib">
+      <HintPath>..\..\Core\PostConnectionLib\bin\Debug\net8.0\PostConnectionLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 
