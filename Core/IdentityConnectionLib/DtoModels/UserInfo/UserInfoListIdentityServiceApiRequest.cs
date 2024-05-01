@@ -5,5 +5,5 @@ public record UserInfoListIdentityServiceApiRequest : BaseRequest
     /// <summary>
     ///     Array of user's ids
     /// </summary>
-    public required Guid[] UsersId { get; init; }
+    public Guid[] UsersId { get; init; }
 }

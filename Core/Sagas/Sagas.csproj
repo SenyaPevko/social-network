@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.2.1-develop.1735"/>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.1-develop.1731"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-preview.3.24172.4"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0-preview.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\IdentityConnectionLib\IdentityConnectionLib.csproj"/>
+        <ProjectReference Include="..\PostConnectionLib\PostConnectionLib.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="Application">
+            <HintPath>..\..\PostServiceApi\Application\bin\Debug\net8.0\Application.dll</HintPath>
+        </Reference>
+        <Reference Include="Domain">
+            <HintPath>..\..\PostServiceApi\Application\bin\Debug\net8.0\Domain.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+</Project>

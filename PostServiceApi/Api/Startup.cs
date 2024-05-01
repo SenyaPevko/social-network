@@ -23,7 +23,9 @@ using Infrastructure.Comments;
 using Infrastructure.PostLikes;
 using Infrastructure.Posts;
 using Infrastructure.Posts.Connections;
+using Infrastructure.Posts.Consumers;
 using Infrastructure.Tags;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -39,11 +41,13 @@ namespace Api
             Configuration = configuration;
         }
 
+        [Obsolete("Obsolete")]
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureDatabase(services);
             ConfigureControllers(services);
             ConfigureSwagger(services);
+            ConfigureMassTransit(services);
             AddMappers(services);
             AddLibsServices(services);
             AddRabbitMqRequestServices(services);
@@ -158,6 +162,39 @@ namespace Api
         private static void AddMiddleWares(IServiceCollection services)
         {
             services.AddTransient<ExceptionHandlingMiddleware>();
+        }
+        
+        [Obsolete("Obsolete")]
+        private void ConfigureMassTransit(IServiceCollection services)
+        {
+            var hostName = Configuration["RabbitMqConnection:HostName"];
+            var port = Configuration.GetValue<ushort>("RabbitMqConnection:Port");
+            var userName = Configuration["RabbitMqConnection:UserName"];
+            var password = Configuration["RabbitMqConnection:Password"];
+            var virtualHost = Configuration["RabbitMqConnection:VirtualHost"];
+            
+            services.AddMassTransit(cfg =>
+            {
+                cfg.SetKebabCaseEndpointNameFormatter();
+                cfg.AddDelayedMessageScheduler();
+                cfg.AddConsumer<PostInfoListConsumer>();
+                cfg.UsingRabbitMq((brc, rbfc) =>
+                {
+                    rbfc.UseInMemoryOutbox();
+                    rbfc.UseMessageRetry(r =>
+                    {
+                        r.Incremental(3, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+                    });
+
+                    rbfc.UseDelayedMessageScheduler();
+                    rbfc.Host(hostName, port, virtualHost, h =>
+                    {
+                        h.Username(userName);
+                        h.Password(password);
+                    });
+                    rbfc.ConfigureEndpoints(brc);
+                });
+            });
         }
     }
 }
